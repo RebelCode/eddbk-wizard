@@ -10,9 +10,13 @@ di.constant('log', function (msg) {
 })
 
 di.constant('API_BASE', 'https://jsonplaceholder.typicode.com')
-axios.defaults.baseURL = di.container.API_BASE
 
-di.constant('http', axios)
+di.provider('http', function () {
+  this.$get = function (container) {
+    axios.defaults.baseURL = container.API_BASE
+    return axios
+  }
+})
 
 di.factory('fetchTodos', fetchTodos)
 
