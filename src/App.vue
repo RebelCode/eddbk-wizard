@@ -5,7 +5,10 @@
 </template>
 
 <script>
-import BookingWizard from '@/components/BookingWizard.vue'
+// @flow
+
+import BookingWizard from './components/BookingWizard/BookingWizard.vue'
+import 'vue-form-wizard/dist/vue-form-wizard.min.css'
 
 export default {
   name: 'app',
@@ -13,4 +16,5 @@ export default {
     BookingWizard
   }
 }
+
 </script>
