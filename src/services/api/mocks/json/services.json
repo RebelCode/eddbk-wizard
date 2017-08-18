@@ -1,0 +1,24 @@
+[
+   {
+      "id": 1,
+      "title": "Polish and clean",
+      "description": "Lorem ipsum",
+      "iconPath": "",
+      "pricePreview": {
+         "minPrice": 60,
+         "minLength": 45,
+         "otherAvailable": true
+      }
+   },
+   {
+      "id": 2,
+      "title": "Root canal treatment",
+      "description": "Ipsum Lorem",
+      "iconPath": "",
+      "pricePreview": {
+         "minPrice": 60,
+         "minLength": 45,
+         "otherAvailable": false
+      }
+   }
+]
