@@ -3,14 +3,16 @@
 import Bottle from 'bottlejs'
 import translate from './i18n/translate.js'
 import axios from 'axios'
+import { HttpHandlerInterface } from './interfaces/HttpHandlerInterface.js'
+import { FormatTranslatorInterface } from './interfaces/FormatTranslatorInterface.js'
+
 const di = new Bottle()
 
-interface HttpHandlerInterface {
-  get(url: string, args: ?{}): {};
-  post(url: string, args: ?{}): {};
-}
+di.constant('translator', translate)
 
-di.service('translate', translate)
+di.factory('translate', function (container: { translator: FormatTranslatorInterface }) {
+  return container.translator.translate
+})
 
 di.constant('API_BASE_URL', '')
 

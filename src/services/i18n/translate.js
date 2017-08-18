@@ -1,5 +1,7 @@
-// @see: https://github.com/Dhii/i18n-interface/blob/master/src/FormatTranslatorInterface.php
+// @flow
 
-export default function () {
-  return s => s
+export default {
+  translate: function (format: string, params: ?Array<mixed>, context: ?string) {
+    return format
+  }
 }
