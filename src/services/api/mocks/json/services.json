@@ -3,7 +3,7 @@
       "id": 1,
       "title": "Polish and clean",
       "description": "Lorem ipsum",
-      "iconPath": "",
+      "imageSrc": "http://lorempixel.com/64/64/technics/2/",
       "pricePreview": {
          "minPrice": 60,
          "minLength": 45,
@@ -14,7 +14,7 @@
       "id": 2,
       "title": "Root canal treatment",
       "description": "Ipsum Lorem",
-      "iconPath": "",
+      "imageSrc": "http://lorempixel.com/64/64/technics/3/",
       "pricePreview": {
          "minPrice": 60,
          "minLength": 45,
