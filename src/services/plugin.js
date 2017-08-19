@@ -4,7 +4,7 @@ const ServicesPlugin = {
   install (Vue, options) {
     Vue.prototype.$services = services
     Vue.prototype.$s = services // a shorthand for all services
-    Vue.prototype.$t = services.translate // a shorthand for translate service
+    Vue.prototype.$_ = services.translate // a shorthand for translate service
   }
 }
 

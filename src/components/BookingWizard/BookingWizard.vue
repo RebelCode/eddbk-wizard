@@ -1,16 +1,16 @@
 <template>
   <div>
-    <form-wizard :title="$t('Book an appointment')" subtitle="" :nextButtonText="$t('Next')" :baclButtonText="$t('Back')" :finishButtonText="$t('Finish')">
-      <tab-content :title="$t('Service')" :before-change="beforeServiceTabSwitch">
+    <form-wizard :title="$_('Book an appointment')" subtitle="" :nextButtonText="$_('Next')" :baclButtonText="$_('Back')" :finishButtonText="$_('Finish')">
+      <tab-content :title="$_('Service')" :before-change="beforeServiceTabSwitch">
         <step-service/>
       </tab-content>
-      <tab-content :title="$t('Date &amp; time')">
+      <tab-content :title="$_('Date &amp; time')">
           Date &amp; time tab content
        </tab-content>
-       <tab-content :title="$t('Payment')">
+       <tab-content :title="$_('Payment')">
          Payment tab content
        </tab-content>
-       <tab-content :title="$t('Confirmation')">
+       <tab-content :title="$_('Confirmation')">
          Confirmation tab content
        </tab-content>
     </form-wizard>
@@ -41,4 +41,3 @@ export default {
 }
 
 </script>
-

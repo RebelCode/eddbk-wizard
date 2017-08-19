@@ -5,8 +5,8 @@
       "description": "Lorem ipsum",
       "imageSrc": "http://lorempixel.com/64/64/technics/2/",
       "pricePreview": {
-         "minPrice": 60,
-         "minLength": 45,
+         "minPrice": "€100",
+         "minLength": "45 minutes",
          "otherAvailable": true
       }
    },
@@ -16,8 +16,8 @@
       "description": "Ipsum Lorem",
       "imageSrc": "http://lorempixel.com/64/64/technics/3/",
       "pricePreview": {
-         "minPrice": 60,
-         "minLength": 45,
+         "minPrice": "€60",
+         "minLength": "40 minutes",
          "otherAvailable": false
       }
    }
