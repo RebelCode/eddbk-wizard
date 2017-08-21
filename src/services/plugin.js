@@ -1,10 +1,10 @@
-import services from './services.js'
+import services from './index.js'
 
 const ServicesPlugin = {
   install (Vue, options) {
-    Vue.prototype.$services = services
-    Vue.prototype.$s = services // a shorthand for all services
-    Vue.prototype.$_ = services.translate // a shorthand for translate service
+    Vue.$services = Vue.prototype.$services = services
+    Vue.$s = Vue.prototype.$s = services // a shorthand for all services
+    Vue.$_ = Vue.prototype.$_ = services.translate // a shorthand for translate service
   }
 }
 
