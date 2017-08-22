@@ -5,14 +5,14 @@
         <step-service v-model="selectedService" :list="servicesList" />
       </tab-content>
       <tab-content :title="$_('Date &amp; time')">
-          Date &amp; time tab content
-       </tab-content>
-       <tab-content :title="$_('Payment')">
-         Payment tab content
-       </tab-content>
-       <tab-content :title="$_('Confirmation')">
-         Confirmation tab content
-       </tab-content>
+        <step-sessions v-if="selectedService" />
+      </tab-content>
+      <tab-content :title="$_('Payment')">
+        Payment tab content
+      </tab-content>
+      <tab-content :title="$_('Confirmation')">
+        Confirmation tab content
+      </tab-content>
     </form-wizard>
   </div>
 </template>
@@ -22,12 +22,14 @@
 
 import { FormWizard, TabContent } from 'vue-form-wizard'
 import StepService from './StepService.vue'
+import StepSessions from './StepSessions.vue'
 
 export default {
   components: {
     FormWizard,
     TabContent,
-    StepService
+    StepService,
+    StepSessions
   },
 
   created () {
@@ -56,3 +58,4 @@ export default {
 }
 
 </script>
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
