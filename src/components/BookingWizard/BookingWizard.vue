@@ -2,7 +2,7 @@
   <div>
     <form-wizard :title="$_('Book an appointment')" subtitle="" :nextButtonText="$_('Next')" :baclButtonText="$_('Back')" :finishButtonText="$_('Finish')">
       <tab-content :title="$_('Service')" :before-change="beforeServiceTabSwitch">
-        <step-service/>
+        <step-service v-model="selectedService" :list="servicesList" />
       </tab-content>
       <tab-content :title="$_('Date &amp; time')">
           Date &amp; time tab content
@@ -18,6 +18,8 @@
 </template>
 
 <script>
+// @flow
+
 import { FormWizard, TabContent } from 'vue-form-wizard'
 import StepService from './StepService.vue'
 
@@ -28,14 +30,27 @@ export default {
     StepService
   },
 
-  data () {
-    return {
+  created () {
+    this.$st.dispatch('services/fetch')
+  },
+
+  computed: {
+    servicesList () {
+      return this.$st.get('services.list')
+    },
+    selectedService: {
+      get () {
+        return this.$st.get('services.selected')
+      },
+      set (value: Object) {
+        this.$st.set('services.selected', value)
+      }
     }
   },
 
   methods: {
     beforeServiceTabSwitch () {
-      return true
+      return this.selectedService !== null
     }
   }
 }

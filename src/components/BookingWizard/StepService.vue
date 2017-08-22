@@ -3,7 +3,7 @@
     <label>{{ $_('Select a service') }}</label>
     <multiselect
       v-model="selectedService"
-      :options="services"
+      :options="list"
       track-by="title"
       label="title"
       :searchable="false"
@@ -33,6 +33,8 @@
 </template>
 
 <script>
+// @flow
+
 import Multiselect from 'vue-multiselect'
 
 export default {
@@ -40,14 +42,20 @@ export default {
     Multiselect
   },
 
-  data () {
-    return {
-      services: [],
-      selectedService: null
-    }
+  props: {
+    list: Array,
+    value: Object
   },
 
   computed: {
+    selectedService: {
+      get () {
+        return this.value
+      },
+      set (value: ?Object) {
+        this.$emit('input', value)
+      }
+    },
     pricePreview () {
       if (!this.selectedService) return null
       return this.$_('Price: %1$s per %2$s appointment', [
@@ -55,12 +63,6 @@ export default {
         this.selectedService.pricePreview.minLength
       ])
     }
-  },
-
-  mounted () {
-    this.$s.fetchServices().then(response => {
-      this.services = response.data
-    })
   }
 }
 </script>
