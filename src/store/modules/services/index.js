@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import { commonMutations } from '@/store/mixins'
 
 import Vue from 'vue'
@@ -9,8 +8,6 @@ const state = {
 }
 
 const getters = {}
-
-const mutations = {}
 
 const actions = {
   fetch ({ commit }) {
@@ -23,10 +20,8 @@ const actions = {
 
 export default {
   namespaced: true,
-  state () {
-    return state
-  },
+  state,
   getters,
   actions,
-  mutations: _.merge(mutations, commonMutations)
+  mutations: commonMutations
 }
