@@ -20,7 +20,6 @@
 <script>
 // @flow
 
-import { mapGetters, mapActions } from 'vuex'
 import { FormWizard, TabContent } from 'vue-form-wizard'
 import StepService from './StepService.vue'
 
@@ -31,33 +30,25 @@ export default {
     StepService
   },
 
-  data () {
-    return {
-    }
-  },
-
   created () {
-    this.fetchServices()
+    this.$st.dispatch('services/fetch')
   },
 
   computed: {
-    ...mapGetters({
-      servicesList: 'services/list'
-    }),
+    servicesList () {
+      return this.$st.get('services.list')
+    },
     selectedService: {
       get () {
-        return this.$store.getters['services/selected']
+        return this.$st.get('services.selected')
       },
-      set (value) {
-        this.$store.commit('services/setSelected', { service: value })
+      set (value: Object) {
+        this.$st.set('services.selected', value)
       }
     }
   },
 
   methods: {
-    ...mapActions({
-      fetchServices: 'services/fetch'
-    }),
     beforeServiceTabSwitch () {
       return this.selectedService !== null
     }

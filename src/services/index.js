@@ -6,6 +6,8 @@ import axios from 'axios'
 import axiosMocks from './api/mocks/axiosMocks.js'
 import { HttpHandlerInterface } from './interfaces/HttpHandlerInterface.js'
 import { FormatTranslatorInterface } from './interfaces/FormatTranslatorInterface.js'
+import { StoreManagerInterface } from './interfaces/StoreManagerInterface.js'
+import vuexBasedStore from './storeManager/vuexBasedStore.js'
 
 const di = new Bottle()
 
@@ -30,6 +32,11 @@ di.factory('fetchServices', function (container: { http: HttpHandlerInterface })
   return () => {
     return container.http.get('/services')
   }
+})
+
+di.constant('storeManager', vuexBasedStore)
+di.factory('store', function (container: { storeManager: StoreManagerInterface }) {
+  return container.storeManager
 })
 
 export default di.container
