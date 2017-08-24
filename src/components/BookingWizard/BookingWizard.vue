@@ -21,8 +21,8 @@
 // @flow
 
 import { FormWizard, TabContent } from 'vue-form-wizard'
-import StepService from './StepService.vue'
-import StepSessions from './StepSessions.vue'
+import StepService from './StepService/StepService.vue'
+import StepSessions from './StepSessions/StepSessions.vue'
 
 export default {
   components: {
@@ -33,19 +33,19 @@ export default {
   },
 
   created () {
-    this.$st.dispatch('services/fetch')
+    this.$sm.dispatch('services/fetch')
   },
 
   computed: {
     servicesList () {
-      return this.$st.get('services.list')
+      return this.$sm.get('services.list')
     },
     selectedService: {
       get () {
-        return this.$st.get('services.selected')
+        return this.$sm.get('services.selected')
       },
       set (value: Object) {
-        this.$st.set('services.selected', value)
+        this.$sm.set('services.selected', value)
       }
     }
   },
