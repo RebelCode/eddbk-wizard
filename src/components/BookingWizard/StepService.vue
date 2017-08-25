@@ -24,7 +24,7 @@
       {{ pricePreview }}
     </div>
 
-    <div v-if="selectedService && selectedService.pricePreview.otherAvailable" class="service__pricePreview">
+    <div v-if="isOtherAvailable" class="service__pricePreview">
       {{ $_('Other appointment lengths available') }}
     </div>
 
@@ -36,6 +36,8 @@
 // @flow
 
 import Multiselect from 'vue-multiselect'
+import _ from 'lodash'
+import moment from 'moment'
 
 export default {
   components: {
@@ -56,11 +58,24 @@ export default {
         this.$emit('input', value)
       }
     },
+    isOtherAvailable () {
+      if (!this.selectedService) return false
+      return Object.keys(this.selectedService.sessionLengthPrices).length > 1
+    },
+    minServiceLength () {
+      const lengths = _.keys(this.selectedService.sessionLengthPrices).map(Number)
+      const minLength = Math.min.apply(Math, lengths)
+      return moment.duration(minLength, 'seconds').humanize()
+    },
+    minServicePrice () {
+      const prices = _.map(this.selectedService.sessionLengthPrices).map(Number)
+      const minPrice = Math.min.apply(Math, prices)
+      return minPrice
+    },
     pricePreview () {
-      if (!this.selectedService) return null
       return this.$_('Price: %1$s per %2$s appointment', [
-        this.selectedService.pricePreview.minPrice,
-        this.selectedService.pricePreview.minLength
+        this.minServicePrice,
+        this.minServiceLength
       ])
     }
   }
