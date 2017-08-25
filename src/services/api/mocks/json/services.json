@@ -4,21 +4,19 @@
       "title": "Polish and clean",
       "description": "Lorem ipsum",
       "imageSrc": "http://lorempixel.com/64/64/technics/2/",
-      "pricePreview": {
-         "minPrice": "€100",
-         "minLength": "45 minutes",
-         "otherAvailable": true
-      }
+      "sessionLengthPrices": {
+    		"900": 20.00,
+    		"1800": 40.00,
+    		"2700": 60.00
+    	}
    },
    {
       "id": 2,
       "title": "Root canal treatment",
       "description": "Ipsum Lorem",
       "imageSrc": "http://lorempixel.com/64/64/technics/3/",
-      "pricePreview": {
-         "minPrice": "€60",
-         "minLength": "40 minutes",
-         "otherAvailable": false
+      "sessionLengthPrices": {
+        "2700": 60.00
       }
    }
 ]
