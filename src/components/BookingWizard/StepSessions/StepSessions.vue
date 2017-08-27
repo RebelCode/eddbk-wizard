@@ -23,6 +23,13 @@
         <span>{{ activeDayFormatted }}</span>
         <span><button @click="nextDay">&#9654;</button></span>
       </div>
+      <div>
+        <button
+          :class="{ selected: session === selectedSession }"
+          v-for="session in activeSessions"
+          @click="selectedSession = session"
+          class="session__item"> {{ session.time }}</button>
+      </div>
     </div>
   </div>
 </template>
@@ -56,6 +63,14 @@ export default {
       set (duration: number) {
         this.$sm.set('calendar.selectedDuration', duration)
       }
+    },
+    selectedSession: {
+      get () {
+        return this.$sm.get('calendar.selectedSession')
+      },
+      set (session: {}) {
+        this.$sm.set('calendar.selectedSession', session)
+      }
     }
   },
 
@@ -86,3 +101,13 @@ export default {
 
 }
 </script>
+
+
+<style>
+  button.session__item.selected {
+    background: #e74c3c;
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+  }
+</style>
