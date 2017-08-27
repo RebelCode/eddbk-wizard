@@ -4,15 +4,16 @@ import _ from 'lodash'
 import { prepareSessionObject, getUniqueDurations } from './_sessionTransform.js'
 
 const state = {
-  all: {},
-  selected: null,
-  selectedDuration: null
+  allSessions: {},
+  selectedSession: null,
+  selectedDuration: null,
+  activeMonth: null,
+  activeDate: null
 }
 
 const getters = {
-  activeDateSessions (state, getters, rootState) {
-    const activeDate = rootState.dates.activeDate
-    return _.filter(state.all, session => { return session.date === activeDate })
+  activeDateSessions (state, getters) {
+    return _.filter(state.allSessions, session => { return session.date === state.activeDate })
   },
 
   activeDateDurations (state, getters) {
@@ -29,13 +30,13 @@ const getters = {
 }
 
 const actions = {
-  fetchAll ({ commit }, { serviceId }) {
+  fetchSessions ({ commit }, { serviceId }) {
     Vue.$s.fetchSessions({ params: { serviceId }}).then(response => {
       const sessions = response.data
       const collection = sessions.map(session => {
         return prepareSessionObject({ session, serviceId })
       })
-      commit('insertBunch', { list: 'all', collection, keyProp: 'uId' })
+      commit('insertBunch', { list: 'allSessions', collection, keyProp: 'uId' })
     })
   }
 }

@@ -31,12 +31,12 @@ export default {
     },
     selectedDate: {
       get () {
-        const selectedDate = this.$sm.get('dates.activeDate')
+        const selectedDate = this.$sm.get('calendar.activeDate')
         return moment(selectedDate, dateFormats.date).toDate()
       },
       set (value: any) {
         const selectedDate = moment(value).format(dateFormats.date)
-        this.$sm.set('dates.activeDate', selectedDate)
+        this.$sm.set('calendar.activeDate', selectedDate)
       }
     }
   },

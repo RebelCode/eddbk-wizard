@@ -32,28 +32,28 @@ export default {
 
   methods: {
     setDefaultDates () {
-      if (!this.$sm.get('dates.activeDate')) {
+      if (!this.$sm.get('calendar.activeDate')) {
         const activeDate = moment().format(dateFormats.date)
-        this.$sm.set('dates.activeDate', activeDate)
+        this.$sm.set('calendar.activeDate', activeDate)
       }
-      if (!this.$sm.get('dates.activeMonth')) {
+      if (!this.$sm.get('calendar.activeMonth')) {
         const activeMonth = moment().format(dateFormats.month)
-        this.$sm.set('dates.activeMonth', activeMonth)
+        this.$sm.set('calendar.activeMonth', activeMonth)
       }
     }
   },
 
   computed: {
     selectedService () { return this.$sm.get('services.selected') },
-    activeDateDurations () { return this.$sm.get('sessions.activeDateDurations') },
-    activeDateSessions () { return this.$sm.get('sessions.activeDateSessions') },
-    activeSessions () { return this.$sm.get('sessions.activeSessions') },
+    activeDateDurations () { return this.$sm.get('calendar.activeDateDurations') },
+    activeDateSessions () { return this.$sm.get('calendar.activeDateSessions') },
+    activeSessions () { return this.$sm.get('calendar.activeSessions') },
     selectedDuration: {
       get () {
-        return this.$sm.get('sessions.selectedDuration')
+        return this.$sm.get('calendar.selectedDuration')
       },
       set (duration: number) {
-        this.$sm.set('sessions.selectedDuration', duration)
+        this.$sm.set('calendar.selectedDuration', duration)
       }
     }
   }
