@@ -34,6 +34,12 @@ di.factory('fetchServices', function (container: { http: HttpHandlerInterface })
   }
 })
 
+di.factory('fetchSessions', function (container: { http: HttpHandlerInterface }) {
+  return ({ params }) => {
+    return container.http.get('/sessions', { params })
+  }
+})
+
 di.constant('storeManager', vuexBasedStore)
 di.factory('store', function (container: { storeManager: StoreManagerInterface }) {
   return container.storeManager

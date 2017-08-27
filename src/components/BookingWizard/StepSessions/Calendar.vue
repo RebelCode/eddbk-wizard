@@ -31,20 +31,19 @@ export default {
     },
     selectedDate: {
       get () {
-        const selectedDate = this.$sm.get('dates.selected')
-        if (!selectedDate) return moment().toDate() // set today by default
-        return moment(selectedDate, dateFormats.calendar).toDate()
+        const selectedDate = this.$sm.get('dates.activeDate')
+        return moment(selectedDate, dateFormats.date).toDate()
       },
       set (value: any) {
-        const selectedDate = moment(value).format(dateFormats.calendar)
-        return selectedDate
+        const selectedDate = moment(value).format(dateFormats.date)
+        this.$sm.set('dates.activeDate', selectedDate)
       }
     }
   },
 
   methods: {
     dateFormatter (date: string) {
-      return moment(date).format(dateFormats.calendar)
+      return moment(date).format(dateFormats.date)
     }
   }
 }

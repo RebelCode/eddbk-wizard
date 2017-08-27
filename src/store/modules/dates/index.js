@@ -1,7 +1,8 @@
 import { commonMutations } from '@/store/mixins'
 
 const state = {
-  selected: null
+  activeMonth: null,
+  activeDate: null
 }
 
 const getters = {}

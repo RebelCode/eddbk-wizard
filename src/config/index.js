@@ -1,5 +1,7 @@
 export const dateFormats = {
-  calendar: 'DD/MM/YYYY'
+  month: 'MM/YYYY',
+  date: 'DD/MM/YYYY',
+  time: 'h:m a'
 }
 
 export default {

@@ -52,6 +52,9 @@ export default {
 
   methods: {
     beforeServiceTabSwitch () {
+      if (this.selectedService) {
+        this.$sm.dispatch('sessions/fetchAll', { serviceId: this.selectedService.id })
+      }
       return this.selectedService !== null
     }
   }
