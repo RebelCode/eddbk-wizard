@@ -2,12 +2,12 @@ import moment from 'moment'
 import { dateFormats } from '@/config'
 import _ from 'lodash'
 
-const getSessionUniqueKey = (serviceId, session) => {
+const getSessionUniqueKey = ({ session, serviceId }) => {
   return serviceId + '_' + session.start + '_' + session.end
 }
 
 export function prepareSessionObject ({ session, serviceId }) {
-  const uId = getSessionUniqueKey(serviceId, session)
+  const uId = getSessionUniqueKey({ session, serviceId })
   session['uId'] = uId
   session['serviceId'] = serviceId
   const startMoment = moment.unix(session.start)

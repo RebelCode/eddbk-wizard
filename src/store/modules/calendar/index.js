@@ -12,8 +12,11 @@ const state = {
 }
 
 const getters = {
-  activeDateSessions (state, getters) {
-    return _.filter(state.allSessions, session => { return session.date === state.activeDate })
+  activeDateSessions (state, getters, rootState) {
+    return _.filter(state.allSessions, session => {
+      return session.date === state.activeDate &&
+        session.serviceId === rootState.services.selected.id
+    })
   },
 
   activeDateDurations (state, getters) {
