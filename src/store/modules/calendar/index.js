@@ -1,33 +1,38 @@
 import { commonMutations } from '@/store/mixins'
 import Vue from 'vue'
 import _ from 'lodash'
-import { prepareSessionObject, getUniqueDurations } from './_sessionTransform.js'
+import moment from 'moment'
+import { prepareSessionObject } from './_sessionTransform.js'
 
 const state = {
-  allSessions: {},
+  allSessions: {}, // [serviceId][year][month][day][duration][{session}]
   selectedSession: null,
-  selectedDuration: null,
-  activeMonth: null,
-  activeDate: null
+  activeYear: 2017,
+  activeMonth: 8,
+  activeDate: 30,
+  activeDuration: null
 }
 
 const getters = {
-  activeDateSessions (state, getters, rootState) {
-    return _.filter(state.allSessions, session => {
-      return session.date === state.activeDate &&
-        session.serviceId === rootState.services.selected.id
-    })
+  serviceId (state, getters, rootState, rootGetters) {
+    return rootGetters['services/selectedId']
   },
 
-  activeDateDurations (state, getters) {
-    return getUniqueDurations(getters.activeDateSessions)
+  activeDateSessions (state, getters, rootState, rootGetters) {
+    return _.get(state.allSessions, [
+      getters.serviceId,
+      state.activeYear,
+      state.activeMonth,
+      state.activeDate
+    ], null)
   },
 
-  activeSessions (state, getters) {
-    if (!state.selectedDuration) return getters.activeDateSessions
-    return _.filter(getters.activeDateSessions, session => {
-      return session.duration === state.selectedDuration
-    })
+  activeSessions (state, getters, rootState, rootGetters) {
+    if (!state.activeDuration) return _.reduce(getters.activeDateSessions, _.merge) // flaten
+
+    return _.get(getters.activeDateSessions, [
+      state.activeDuration
+    ], null)
   }
 
 }
@@ -39,7 +44,24 @@ const actions = {
       const collection = sessions.map(session => {
         return prepareSessionObject({ session, serviceId })
       })
-      commit('insertBunch', { list: 'allSessions', collection, keyProp: 'uId' })
+      commit('insertAsSessionsTree', { collection })
+    })
+  }
+}
+
+const mutations = {
+  insertAsSessionsTree (state, { collection }) {
+    _.each(collection, session => {
+      const sessionStart = moment.unix(session.start)
+      const objectPath = [
+        session.serviceId,
+        sessionStart.year(),
+        sessionStart.month(),
+        sessionStart.date(),
+        session.duration,
+        session.uId
+      ]
+      _.setWith(state.allSessions, objectPath, session, Object)
     })
   }
 }
@@ -49,5 +71,5 @@ export default {
   state,
   getters,
   actions,
-  mutations: commonMutations
+  mutations: _.merge(mutations, commonMutations)
 }

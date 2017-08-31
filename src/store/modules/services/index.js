@@ -1,5 +1,5 @@
 import { commonMutations } from '@/store/mixins'
-
+import _ from 'lodash'
 import Vue from 'vue'
 
 const state = {
@@ -7,7 +7,11 @@ const state = {
   selected: null
 }
 
-const getters = {}
+const getters = {
+  selectedId (state) {
+    return _.get(state, 'selected.id', null)
+  }
+}
 
 const actions = {
   fetch ({ commit }) {
