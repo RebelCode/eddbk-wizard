@@ -39,7 +39,7 @@ const getters = {
 
 const actions = {
   fetchSessions ({ commit }, { serviceId }) {
-    Vue.$s.fetchSessions({ params: { serviceId }}).then(response => {
+    Vue.$api.fetchSessions({ params: { serviceId }}).then(response => {
       const sessions = response.data
       const collection = sessions.map(session => {
         return prepareSessionObject({ session, serviceId })

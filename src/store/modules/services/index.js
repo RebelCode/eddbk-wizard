@@ -15,7 +15,7 @@ const getters = {
 
 const actions = {
   fetch ({ commit }) {
-    Vue.$s.fetchServices().then(response => {
+    Vue.$api.fetchServices().then(response => {
       const services = _.map(response.data)
       commit('set', { key: 'list', value: services })
     })

@@ -1,11 +1,15 @@
-import services from './index.js'
+import di from '@/services'
 
 const ServicesPlugin = {
   install (Vue, options) {
+    const services = di.container
     Vue.$services = Vue.prototype.$services = services
-    Vue.$s = Vue.prototype.$s = services // a shorthand for all services
-    Vue.$_ = Vue.prototype.$_ = services.translate // a shorthand for translate service
-    Vue.$sm = Vue.prototype.$sm = services.store // a shorthand for store service
+
+    // shorthands for common services
+    Vue.$s = Vue.prototype.$s = services
+    Vue.$_ = Vue.prototype.$_ = services.translate
+    Vue.$sm = Vue.prototype.$sm = services.store
+    Vue.$api = Vue.prototype.$api = services.api
   }
 }
 

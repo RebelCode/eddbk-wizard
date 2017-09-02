@@ -1,4 +1,5 @@
 // @flow
+
 import { vsprintf } from 'sprintf-js'
 
 export default {
