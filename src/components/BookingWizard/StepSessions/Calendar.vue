@@ -7,6 +7,7 @@
       :day-view-only="true"
       :disabled="datesRange"
       :format="dateFormatter"
+      @changedMonth="updateVisibleMonth"
       />
   </div>
 </template>
@@ -23,12 +24,6 @@ export default {
     Datepicker
   },
 
-  data () {
-    return {
-      visibleMonth: null
-    }
-  },
-
   created () {
     this.updateVisibleMonth(new Date())
   },
@@ -37,8 +32,7 @@ export default {
     datesRange () {
       return {
         to: moment().subtract(1, 'days').toDate(), // disable all days before today
-        dates: [
-        ]
+        dates: this.$sm.get('calendar.visibleMonthDisabledDates')
       }
     },
     selectedDate: {
@@ -60,6 +54,13 @@ export default {
   methods: {
     dateFormatter (date: string) {
       return moment(date).format(dateFormats.date)
+    },
+    updateVisibleMonth (value: Date) {
+      const visibleMonth = {
+        year: value.getFullYear(),
+        month: value.getMonth()
+      }
+      this.$sm.set('calendar.visibleMonth', visibleMonth)
     }
   }
 }
