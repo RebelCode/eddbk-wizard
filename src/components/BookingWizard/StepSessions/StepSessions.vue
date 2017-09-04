@@ -10,7 +10,7 @@
     <div class="">
       <div class="">{{ $_('Step 2. Select duration') }}</div>
       <div>
-        <select v-model="selectedDuration">
+        <select v-model="activeDuration">
           <option :value="null">{{ $_('All') }}</option>
           <option v-for="duration in activeDateDurations" :value="duration.duration"> {{ duration.title }}</option>
         </select>
@@ -28,7 +28,7 @@
           :class="{ selected: session === selectedSession }"
           v-for="session in activeSessions"
           @click="selectedSession = session"
-          class="session__item"> {{ session.time }}</button>
+          class="session__item"> {{ session.start | epochToFormat('time') }}</button>
       </div>
     </div>
   </div>
@@ -51,17 +51,25 @@ export default {
 
   computed: {
     selectedService () { return this.$sm.get('services.selected') },
-    activeDateDurations () { return this.$sm.get('calendar.activeDateDurations') },
+    activeDateDurations () {
+      const durations = this.$sm.get('calendar.activeDateDurations')
+      return durations.map(Number).map(d => {
+        return {
+          title: moment.duration(d, 'seconds').humanize(),
+          duration: d
+        }
+      })
+    },
     activeDateSessions () { return this.$sm.get('calendar.activeDateSessions') },
     activeSessions () { return this.$sm.get('calendar.activeSessions') },
     activeDate () { return this.$sm.get('calendar.activeDate') },
     activeDayFormatted () { return moment(this.activeDate, dateFormats.date).format(dateFormats.displayDay) },
-    selectedDuration: {
+    activeDuration: {
       get () {
-        return this.$sm.get('calendar.selectedDuration')
+        return this.$sm.get('calendar.activeDuration')
       },
       set (duration: number) {
-        this.$sm.set('calendar.selectedDuration', duration)
+        this.$sm.set('calendar.activeDuration', duration)
       }
     },
     selectedSession: {
@@ -76,14 +84,7 @@ export default {
 
   methods: {
     setDefaultDates () {
-      if (!this.$sm.get('calendar.activeDate')) {
-        const activeDate = moment().format(dateFormats.date)
-        this.$sm.set('calendar.activeDate', activeDate)
-      }
-      if (!this.$sm.get('calendar.activeMonth')) {
-        const activeMonth = moment().format(dateFormats.month)
-        this.$sm.set('calendar.activeMonth', activeMonth)
-      }
+      //
     },
 
     nextDay () {
@@ -96,6 +97,12 @@ export default {
       const activeDateMoment = moment(this.activeDate, dateFormats.date)
       const prevDate = activeDateMoment.subtract(1, 'days').format(dateFormats.date)
       this.$sm.set('calendar.activeDate', prevDate)
+    }
+  },
+
+  filters: {
+    epochToFormat (timestamp: Number, format: String) {
+      return moment.unix(timestamp).format(dateFormats[format])
     }
   }
 

@@ -23,20 +23,36 @@ export default {
     Datepicker
   },
 
+  data () {
+    return {
+      visibleMonth: null
+    }
+  },
+
+  created () {
+    this.updateVisibleMonth(new Date())
+  },
+
   computed: {
     datesRange () {
       return {
-        to: moment().subtract(1, 'days').toDate() // disable all days before today
+        to: moment().subtract(1, 'days').toDate(), // disable all days before today
+        dates: [
+        ]
       }
     },
     selectedDate: {
       get () {
-        const selectedDate = this.$sm.get('calendar.activeDate')
-        return moment(selectedDate, dateFormats.date).toDate()
+        const activeDate = this.$sm.get('calendar.activeDate')
+        return new Date(activeDate.year, activeDate.month, activeDate.day)
       },
-      set (value: any) {
-        const selectedDate = moment(value).format(dateFormats.date)
-        this.$sm.set('calendar.activeDate', selectedDate)
+      set (date: any) {
+        const activeDate = {
+          year: date.getFullYear(),
+          month: date.getMonth(),
+          day: date.getDate()
+        }
+        this.$sm.set('calendar.activeDate', activeDate)
       }
     }
   },

@@ -2,14 +2,17 @@ import { commonMutations } from '@/store/mixins'
 import Vue from 'vue'
 import _ from 'lodash'
 import moment from 'moment'
-import { prepareSessionObject } from './_sessionTransform.js'
+import { getSessionUniqueKey } from './_sessionTransform.js'
+import { vueSet } from 'vue-deepset'
 
 const state = {
-  allSessions: {}, // [serviceId][year][month][day][duration][{session}]
+  allSessions: {}, // [serviceId][year][month][day][duration][sessionKey][{session}]
   selectedSession: null,
-  activeYear: 2017,
-  activeMonth: 8,
-  activeDate: 30,
+  activeDate: {
+    year: 2017,
+    month: 8,
+    day: 5
+  },
   activeDuration: null
 }
 
@@ -53,15 +56,15 @@ const mutations = {
   insertAsSessionsTree (state, { collection }) {
     _.each(collection, session => {
       const sessionStart = moment.unix(session.start)
-      const objectPath = [
-        session.serviceId,
-        sessionStart.year(),
-        sessionStart.month(),
-        sessionStart.date(),
-        session.duration,
-        session.uId
-      ]
-      _.setWith(state.allSessions, objectPath, session, Object)
+      const duration = session.end - session.start
+      const uniqueKey = getSessionUniqueKey(session)
+      const objectPath = session.serviceId + '.' +
+        sessionStart.year() + '.' +
+        sessionStart.month() + '.' +
+        sessionStart.date() + '.' +
+        duration + '.' +
+        uniqueKey
+      vueSet(state.allSessions, objectPath, session)
     })
   }
 }

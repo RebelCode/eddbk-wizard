@@ -23,6 +23,7 @@
     "moment": "^2.18.1",
     "sprintf-js": "^1.1.1",
     "vue": "^2.3.3",
+    "vue-deepset": "^0.5.1",
     "vue-form-wizard": "^0.6.3",
     "vue-multiselect": "^2.0.2",
     "vuejs-datepicker": "^0.9.9",
