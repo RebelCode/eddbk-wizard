@@ -19,9 +19,9 @@
     <div class="">
       <div>{{ $_('Step 3. Choose available appointment time') }}</div>
       <div>
-        <span><button @click="prevDay">&#9664;</button></span>
+        <span><button @click="prevDay" :disabled="prevDayIndex === null">&#9664;</button></span>
         <span>{{ activeDayFormatted }}</span>
-        <span><button @click="nextDay">&#9654;</button></span>
+        <span><button @click="nextDay" :disabled="nextDayIndex === null">&#9654;</button></span>
       </div>
       <div>
         <button
@@ -63,7 +63,8 @@ export default {
     activeDateSessions () { return this.$sm.get('calendar.activeDateSessions') },
     activeSessions () { return this.$sm.get('calendar.activeSessions') },
     activeDate () { return this.$sm.get('calendar.activeDate') },
-    activeDayFormatted () { return moment(this.activeDate, dateFormats.date).format(dateFormats.displayDay) },
+    activeMonthDays () { return this.$sm.get('calendar.activeMonthDays') },
+    activeDayFormatted () { return moment(this.activeDate).format(dateFormats.displayDay) },
     activeDuration: {
       get () {
         return this.$sm.get('calendar.activeDuration')
@@ -79,24 +80,56 @@ export default {
       set (session: {}) {
         this.$sm.set('calendar.selectedSession', session)
       }
+    },
+
+    currentDayIndex () {
+      const currentIndex = this.activeMonthDays.indexOf(this.activeDate.day)
+      if (currentIndex < 0) return null
+      return currentIndex
+    },
+
+    nextDayIndex () {
+      const nextIndex = this.currentDayIndex + 1
+      if (typeof this.activeMonthDays[nextIndex] === 'undefined') return null
+      return nextIndex
+    },
+
+    prevDayIndex () {
+      const prevIndex = this.currentDayIndex - 1
+      if (typeof this.activeMonthDays[prevIndex] === 'undefined') return null
+      return prevIndex
     }
   },
 
   methods: {
     setDefaultDates () {
-      //
+      this.setActiveDate(new Date())
+    },
+
+    setActiveDate (date: Date) {
+      const mDate = moment(date)
+      const dateObj = {
+        year: mDate.year(),
+        month: mDate.month(),
+        day: mDate.date()
+      }
+      this.$sm.set('calendar.activeDate', dateObj)
     },
 
     nextDay () {
-      const activeDateMoment = moment(this.activeDate, dateFormats.date)
-      const nextDate = activeDateMoment.add(1, 'days').format(dateFormats.date)
-      this.$sm.set('calendar.activeDate', nextDate)
+      const nextDay = this.activeMonthDays[this.nextDayIndex]
+      if (nextDay) {
+        const nextDate = Object.assign({}, this.activeDate, { day: nextDay })
+        this.$sm.set('calendar.activeDate', nextDate)
+      }
     },
 
     prevDay () {
-      const activeDateMoment = moment(this.activeDate, dateFormats.date)
-      const prevDate = activeDateMoment.subtract(1, 'days').format(dateFormats.date)
-      this.$sm.set('calendar.activeDate', prevDate)
+      const prevDay = this.activeMonthDays[this.prevDayIndex]
+      if (prevDay) {
+        const prevDate = Object.assign({}, this.activeDate, { day: prevDay })
+        this.$sm.set('calendar.activeDate', prevDate)
+      }
     }
   },
 

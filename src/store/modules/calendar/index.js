@@ -9,9 +9,9 @@ const state = {
   allSessions: {}, // [serviceId][year][month][day][duration][sessionKey][{session}]
   selectedSession: null,
   activeDate: {
-    year: 2017,
-    month: 8,
-    day: 5
+    year: null,
+    month: null,
+    day: null
   },
   visibleMonth: {
     year: null,
@@ -44,6 +44,15 @@ const getters = {
     return _.get(getters.activeDateSessions, [
       state.activeDuration
     ], [])
+  },
+
+  activeMonthDays (state, getters, rootState, rootGetters) {
+    const days = _.get(state.allSessions, [
+      getters.serviceId,
+      state.activeDate.year,
+      state.activeDate.month
+    ], [])
+    return _.keys(days).map(Number)
   },
 
   visibleMonthDays (state, getters, rootState, rootGetters) {
