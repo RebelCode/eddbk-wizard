@@ -79,7 +79,7 @@ const actions = {
     // debug: set hardcode timestamps for now
     const start = 1504483200
     const end = 1509753600
-    Vue.$api.fetchSessions({ params: { serviceId, start, end }}).then(response => {
+    Vue.$api.fetchSessions({ serviceId, start, end }).then(response => {
       const sessions = response.data
       commit('insertAsSessionsTree', { collection: sessions })
     })
