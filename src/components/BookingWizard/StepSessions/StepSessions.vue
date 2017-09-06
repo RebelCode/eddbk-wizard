@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="{ 'session-loading': ui.sessionLoading }">
     <div class="">
       {{ $_('You are booking a ') }} <strong>{{ selectedService.title }}</strong>
     </div>
@@ -40,13 +40,26 @@ import Calendar from './Calendar.vue'
 import moment from '@/utils/moment'
 import { dateFormats } from '@/config'
 
+let loadingTimer = null
+const loadingTimerDelay = 100
+
 export default {
   components: {
     Calendar
   },
 
+  data () {
+    return {
+      ui: {
+        sessionLoading: false
+      }
+    }
+  },
+
   created () {
     this.setDefaultDates()
+    this.$eventBus.$on('fetchingSessions:start', this.showLoader)
+    this.$eventBus.$on('fetchingSessions:end', this.hideLoader)
   },
 
   computed: {
@@ -130,6 +143,17 @@ export default {
         const prevDate = Object.assign({}, this.activeDate, { day: prevDay })
         this.$sm.set('calendar.activeDate', prevDate)
       }
+    },
+
+    showLoader () {
+      loadingTimer = setTimeout(() => {
+        this.ui.sessionLoading = true
+      }, loadingTimerDelay)
+    },
+
+    hideLoader () {
+      clearTimeout(loadingTimer)
+      this.ui.sessionLoading = false
     }
   },
 
@@ -149,5 +173,18 @@ export default {
     color: #fff;
     border: none;
     border-radius: 50px;
+  }
+  .session-loading {
+    position: relative;
+    filter: blur(3px);
+  }
+  .session-loading:after {
+    content: '';
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    background: rgba(255, 255, 255, 0.75);
   }
 </style>

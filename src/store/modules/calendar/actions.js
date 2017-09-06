@@ -34,14 +34,17 @@ export default {
 
     const start = mRange.start.unix()
     const end = mRange.end.unix()
-    return dispatch('loadSessions', { serviceId, start, end })
+    Vue.$eventBus.$emit('fetchingSessions:start', { serviceId, month })
+    return dispatch('loadSessions', { serviceId, start, end }).then(
+      result => Vue.$eventBus.$emit('fetchingSessions:end', { serviceId, month, error: null }),
+      error => Vue.$eventBus.$emit('fetchingSessions:end', { serviceId, month, error })
+    )
   },
 
   loadSessions ({ commit }, { serviceId, start, end }) {
-    Vue.$repo.getSessions({ serviceId, start, end }).then(response => {
+    return Vue.$repo.getSessions({ serviceId, start, end }).then(response => {
       const sessions = response.data
       commit('insertAsSessionsTree', { collection: sessions })
-      return true
     })
   }
 }
