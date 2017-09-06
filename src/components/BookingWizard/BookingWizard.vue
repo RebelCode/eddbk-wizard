@@ -53,7 +53,7 @@ export default {
   methods: {
     beforeServiceTabSwitch () {
       if (this.selectedService) {
-        this.$sm.dispatch('calendar/fetchSessions', { serviceId: this.selectedService.id })
+        this.$sm.dispatch('calendar/getSessionsByMonth', { /* month data */ })
       }
       return this.selectedService !== null
     }

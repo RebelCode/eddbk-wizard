@@ -10,6 +10,7 @@ const ServicesPlugin = {
     Vue.$_ = Vue.prototype.$_ = services.translate
     Vue.$sm = Vue.prototype.$sm = services.store
     Vue.$api = Vue.prototype.$api = services.api
+    Vue.$repo = Vue.prototype.$repo = services.repo
   }
 }
 
