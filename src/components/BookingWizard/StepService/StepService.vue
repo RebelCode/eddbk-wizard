@@ -36,7 +36,7 @@
 
 import Multiselect from 'vue-multiselect'
 import _ from 'lodash'
-import moment from 'moment'
+import moment from '@/utils/moment'
 
 export default {
   components: {

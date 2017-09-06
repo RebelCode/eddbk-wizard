@@ -1,4 +1,7 @@
 import Vue from 'vue'
+import moment from '@/utils/moment'
+
+window.moment = moment
 
 export default {
   getSessionsByMonth ({ dispatch, getters }, { serviceId, month }) {

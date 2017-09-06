@@ -15,7 +15,7 @@
 <script>
 // @flow
 import Datepicker from 'vuejs-datepicker'
-import moment from 'moment'
+import moment from '@/utils/moment'
 
 import { dateFormats } from '@/config'
 

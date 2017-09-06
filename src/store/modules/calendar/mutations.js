@@ -1,4 +1,4 @@
-import moment from 'moment'
+import moment from '@/utils/moment'
 import { getSessionUniqueKey } from './_sessionTransform.js'
 import { vueSet } from 'vue-deepset'
 import _ from 'lodash'
