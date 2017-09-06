@@ -8,7 +8,7 @@ const defaultSessionsRange = () => {
   return moment.range(start, end)
 }
 
-const isMonthCached = (allSessions: Object, serviceId: number, month) => {
+const isMonthCached = (allSessions, serviceId: number, month) => {
   if (!month) return false
 
   return _.has(allSessions, [
@@ -37,7 +37,7 @@ export default {
     return dispatch('loadSessions', { serviceId, start, end })
   },
 
-  loadSessions ({ commit }: Object, { serviceId, start, end }) {
+  loadSessions ({ commit }, { serviceId, start, end }) {
     Vue.$repo.getSessions({ serviceId, start, end }).then(response => {
       const sessions = response.data
       commit('insertAsSessionsTree', { collection: sessions })

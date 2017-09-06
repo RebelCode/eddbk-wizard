@@ -11,6 +11,7 @@ const ServicesPlugin = {
     Vue.$sm = Vue.prototype.$sm = services.store
     Vue.$api = Vue.prototype.$api = services.api
     Vue.$repo = Vue.prototype.$repo = services.repo
+    Vue.$eventHub = Vue.prototype.$eventHub = services.eventHub
   }
 }
 
