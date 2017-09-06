@@ -60,6 +60,7 @@ export default {
         year: value.getFullYear(),
         month: value.getMonth()
       }
+      this.$sm.dispatch('calendar/loadSessionsByMonth', { month: visibleMonth })
       this.$sm.set('calendar.visibleMonth', visibleMonth)
     }
   }

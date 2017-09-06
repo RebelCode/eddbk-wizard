@@ -1,18 +1,30 @@
 import Vue from 'vue'
 import moment from '@/utils/moment'
 
-window.moment = moment
+const defaultSessionsRange = () => {
+  const start = moment() // now
+  const end = moment().add(1, 'month').endOf('month') // end of the next month
+  return moment.range(start, end)
+}
 
 export default {
-  getSessionsByMonth ({ dispatch, getters }, { serviceId, month }) {
+  loadSessionsByMonth ({ dispatch, getters }, { serviceId, month }) {
     if (!serviceId) serviceId = getters.serviceId
-    // debug: set hardcode timestamps for now
-    const start = 1504483200
-    const end = 1509753600
-    return dispatch('getSessions', { serviceId, start, end })
+
+    let mRange
+
+    if (!month) {
+      mRange = defaultSessionsRange()
+    } else {
+      mRange = moment(month).range('month')
+    }
+
+    const start = mRange.start.unix()
+    const end = mRange.end.unix()
+    return dispatch('loadSessions', { serviceId, start, end })
   },
 
-  getSessions ({ commit }, { serviceId, start, end }) {
+  loadSessions ({ commit }, { serviceId, start, end }) {
     Vue.$repo.getSessions({ serviceId, start, end }).then(response => {
       const sessions = response.data
       commit('insertAsSessionsTree', { collection: sessions })
