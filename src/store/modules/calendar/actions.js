@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import moment from '@/utils/moment'
+import _ from 'lodash'
 
 const defaultSessionsRange = () => {
   const start = moment() // now
@@ -7,9 +8,21 @@ const defaultSessionsRange = () => {
   return moment.range(start, end)
 }
 
+const isMonthCached = (allSessions: Object, serviceId: number, month) => {
+  if (!month) return false
+
+  return _.has(allSessions, [
+    serviceId,
+    month.year,
+    month.month
+  ])
+}
+
 export default {
-  loadSessionsByMonth ({ dispatch, getters }, { serviceId, month }) {
+  loadSessionsByMonth ({ dispatch, getters, state }, { serviceId, month }) {
     if (!serviceId) serviceId = getters.serviceId
+
+    if (isMonthCached(state.allSessions, serviceId, month)) return
 
     let mRange
 
@@ -24,7 +37,7 @@ export default {
     return dispatch('loadSessions', { serviceId, start, end })
   },
 
-  loadSessions ({ commit }, { serviceId, start, end }) {
+  loadSessions ({ commit }: Object, { serviceId, start, end }) {
     Vue.$repo.getSessions({ serviceId, start, end }).then(response => {
       const sessions = response.data
       commit('insertAsSessionsTree', { collection: sessions })
