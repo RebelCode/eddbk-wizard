@@ -36,15 +36,36 @@ export default {
     const end = mRange.end.unix()
     Vue.$eventBus.$emit('fetchingSessions:start', { serviceId, month })
     return dispatch('loadSessions', { serviceId, start, end }).then(
-      result => Vue.$eventBus.$emit('fetchingSessions:end', { serviceId, month, error: null }),
-      error => Vue.$eventBus.$emit('fetchingSessions:end', { serviceId, month, error })
+      result => {
+        Vue.$eventBus.$emit('fetchingSessions:end', { serviceId, month, error: null })
+        return result
+      },
+      error => {
+        Vue.$eventBus.$emit('fetchingSessions:end', { serviceId, month, error })
+        return error
+      }
     )
   },
 
   loadSessions ({ commit }, { serviceId, start, end }) {
-    return Vue.$repo.getSessions({ serviceId, start, end }).then(response => {
-      const sessions = response.data
+    return Vue.$repo.sessions.load({ serviceId, start, end }).then(sessions => {
       commit('insertAsSessionsTree', { collection: sessions })
+      return sessions
+    })
+  },
+
+  setActiveDayByTimestamp ({ commit }, { timestamp }) {
+    const mDate = moment.unix(timestamp)
+    const year = mDate.year()
+    const month = mDate.month()
+    const day = mDate.date()
+    commit('set', {
+      key: 'activeDate',
+      value: { year, month, day }
+    })
+    commit('set', {
+      key: 'visibleMonth',
+      value: { year, month }
     })
   }
 }

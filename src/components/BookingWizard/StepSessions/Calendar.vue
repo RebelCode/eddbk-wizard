@@ -24,10 +24,6 @@ export default {
     Datepicker
   },
 
-  created () {
-    this.updateVisibleMonth(new Date())
-  },
-
   computed: {
     datesRange () {
       return {

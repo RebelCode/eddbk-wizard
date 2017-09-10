@@ -57,7 +57,6 @@ export default {
   },
 
   created () {
-    this.setDefaultDates()
     this.$eventBus.$on('fetchingSessions:start', this.showLoader)
     this.$eventBus.$on('fetchingSessions:end', this.hideLoader)
   },
@@ -115,20 +114,6 @@ export default {
   },
 
   methods: {
-    setDefaultDates () {
-      this.setActiveDate(new Date())
-    },
-
-    setActiveDate (date: Date) {
-      const mDate = moment(date)
-      const dateObj = {
-        year: mDate.year(),
-        month: mDate.month(),
-        day: mDate.date()
-      }
-      this.$sm.set('calendar.activeDate', dateObj)
-    },
-
     nextDay () {
       const nextDay = this.activeMonthDays[this.nextDayIndex]
       if (nextDay) {

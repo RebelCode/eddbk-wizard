@@ -19,7 +19,7 @@
 
 <script>
 // @flow
-
+import _ from 'lodash'
 import { FormWizard, TabContent } from 'vue-form-wizard'
 import StepService from './StepService/StepService.vue'
 import StepSessions from './StepSessions/StepSessions.vue'
@@ -53,7 +53,11 @@ export default {
   methods: {
     beforeServiceTabSwitch () {
       if (this.selectedService) {
-        this.$sm.dispatch('calendar/loadSessionsByMonth', {})
+        this.$sm.dispatch('calendar/loadSessionsByMonth', {}).then(result => {
+          const firstService = _.first(result)
+          const timestamp = _.get(firstService, 'start')
+          if (timestamp) this.$sm.dispatch('calendar/setActiveDayByTimestamp', { timestamp })
+        })
       }
       return this.selectedService !== null
     }
