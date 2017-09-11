@@ -28,8 +28,12 @@
           :class="{ selected: session === selectedSession }"
           v-for="session in activeSessions"
           @click="selectedSession = session"
-          class="session__item"> {{ session.start | epochToFormat('time') }}</button>
+          class="session__item"> {{ session.start | epochToFormat('time') }} — {{ session.end | epochToFormat('time') }}</button>
       </div>
+    </div>
+    <div class="">
+      <div class="">{{ $_('Step 4. Additional notes') }}</div>
+      <textarea rows="8" v-model="form.notes"></textarea>
     </div>
   </div>
 </template>
@@ -50,6 +54,9 @@ export default {
 
   data () {
     return {
+      form: {
+        notes: ''
+      },
       ui: {
         sessionLoading: false
       }
