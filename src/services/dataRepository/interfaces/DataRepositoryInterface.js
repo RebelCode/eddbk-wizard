@@ -1,5 +1,7 @@
 // @flow
+import { ApiInterface } from '@/services/api/interfaces/ApiInterface.js'
+import { SessionsRepoInterface } from './SessionsRepoInterface.js'
 
-export interface DataRepositoryInterface {
-
+export type DataRepositoryInterface = (api: ApiInterface) => {
+  sessions: SessionsRepoInterface
 }

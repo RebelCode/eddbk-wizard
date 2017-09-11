@@ -1,7 +1,11 @@
+// @flow
+
 import _ from 'lodash'
 import { prepareSessionObject } from './_sessionTransform.js'
+import { SessionsRepoInterface } from '../interfaces/SessionsRepoInterface.js'
+import { ApiInterface } from '@/services/api/interfaces/ApiInterface.js'
 
-const SessionsRepo = function ({ api }) {
+const SessionsRepo = function (api: ApiInterface) {
   var allSessions = {}
 
   const cacheSessions = (sessions) => {
@@ -10,7 +14,7 @@ const SessionsRepo = function ({ api }) {
     }
   }
 
-  return {
+  const sessionsRepo: SessionsRepoInterface = {
     load ({ serviceId, start, end }) {
       return api.fetchSessions({ serviceId, start, end }).then(response => {
         const sessionsPrepared = _.map(response.data, prepareSessionObject)
@@ -24,10 +28,12 @@ const SessionsRepo = function ({ api }) {
     },
 
     all () {
-      return allSessions
+      return _.map(allSessions)
     }
 
   }
+
+  return sessionsRepo
 }
 
 export default SessionsRepo

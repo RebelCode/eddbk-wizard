@@ -2,6 +2,7 @@
 
 import di from '@/services/di'
 import { HttpHandlerInterface } from './interfaces/HttpHandlerInterface.js'
+import { ApiInterface } from './interfaces/ApiInterface.js'
 import axios from 'axios'
 import { apiSettings } from '@/config'
 
@@ -19,7 +20,7 @@ di.factory('http', function (container: { API_BASE_URL: string }) {
 di.factory('api', function (container: { http: HttpHandlerInterface }) {
   const http = container.http
 
-  return {
+  const api: ApiInterface = {
     fetchServices () {
       return http.get('/services')
     },
@@ -33,4 +34,5 @@ di.factory('api', function (container: { http: HttpHandlerInterface }) {
       })
     }
   }
+  return api
 })

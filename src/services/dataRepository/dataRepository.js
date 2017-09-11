@@ -1,7 +1,10 @@
-import SessionsRepo from './sessions'
+// @flow
 
-export default function (api: any) {
+import SessionsRepo from './sessions'
+import { ApiInterface } from '@/services/api/interfaces/ApiInterface.js'
+
+export default function (api: ApiInterface) {
   return {
-    sessions: new SessionsRepo({ api })
+    sessions: new SessionsRepo(api)
   }
 }
