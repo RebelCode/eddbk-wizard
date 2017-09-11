@@ -5,54 +5,64 @@
         <step-service v-model="selectedService" :list="servicesList" />
       </tab-content>
       <tab-content :title="$_('Date &amp; time')">
-          Date &amp; time tab content
-       </tab-content>
-       <tab-content :title="$_('Payment')">
-         Payment tab content
-       </tab-content>
-       <tab-content :title="$_('Confirmation')">
-         Confirmation tab content
-       </tab-content>
+        <step-sessions v-if="selectedService" />
+      </tab-content>
+      <tab-content :title="$_('Payment')">
+        Payment tab content
+      </tab-content>
+      <tab-content :title="$_('Confirmation')">
+        Confirmation tab content
+      </tab-content>
     </form-wizard>
   </div>
 </template>
 
 <script>
 // @flow
-
+import _ from 'lodash'
 import { FormWizard, TabContent } from 'vue-form-wizard'
-import StepService from './StepService.vue'
+import StepService from './StepService/StepService.vue'
+import StepSessions from './StepSessions/StepSessions.vue'
 
 export default {
   components: {
     FormWizard,
     TabContent,
-    StepService
+    StepService,
+    StepSessions
   },
 
   created () {
-    this.$st.dispatch('services/fetch')
+    this.$sm.dispatch('services/fetch')
   },
 
   computed: {
     servicesList () {
-      return this.$st.get('services.list')
+      return this.$sm.get('services.list')
     },
     selectedService: {
       get () {
-        return this.$st.get('services.selected')
+        return this.$sm.get('services.selected')
       },
       set (value: Object) {
-        this.$st.set('services.selected', value)
+        this.$sm.set('services.selected', value)
       }
     }
   },
 
   methods: {
     beforeServiceTabSwitch () {
+      if (this.selectedService) {
+        this.$sm.dispatch('calendar/loadSessionsByMonth', {}).then(result => {
+          const firstService = _.first(result)
+          const timestamp = _.get(firstService, 'start')
+          if (timestamp) this.$sm.dispatch('calendar/setActiveDayByTimestamp', { timestamp })
+        })
+      }
       return this.selectedService !== null
     }
   }
 }
 
 </script>
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

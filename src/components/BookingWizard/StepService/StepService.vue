@@ -28,7 +28,6 @@
       {{ $_('Other appointment lengths available') }}
     </div>
 
-    </div>
   </div>
 </template>
 
@@ -37,7 +36,7 @@
 
 import Multiselect from 'vue-multiselect'
 import _ from 'lodash'
-import moment from 'moment'
+import moment from '@/utils/moment'
 
 export default {
   components: {
@@ -60,26 +59,25 @@ export default {
     },
     isOtherAvailable () {
       if (!this.selectedService) return false
-      return Object.keys(this.selectedService.sessionLengthPrices).length > 1
+      return Object.keys(this.selectedService.sessionLengths).length > 1
     },
-    minServiceLength () {
-      const lengths = _.keys(this.selectedService.sessionLengthPrices).map(Number)
-      const minLength = Math.min.apply(Math, lengths)
-      return moment.duration(minLength, 'seconds').humanize()
-    },
-    minServicePrice () {
-      const prices = _.map(this.selectedService.sessionLengthPrices).map(Number)
-      const minPrice = Math.min.apply(Math, prices)
-      return minPrice
+    minServiceSession () {
+      if (!this.selectedService) return null
+      const sessionLengths = this.selectedService.sessionLengths
+      const prices = _.map(sessionLengths, s => s.price.amount).map(Number)
+      const minPrice = _.min(prices)
+      return _.find(sessionLengths, s => s.price.amount === minPrice)
     },
     pricePreview () {
+      if (!this.selectedService) return null
+      const minSessionPrice = this.minServiceSession.price.formatted
+      const minSessionLength = this.minServiceSession.length
+      const minSessionLengthHumanized = moment.duration(minSessionLength, 'seconds').humanize()
       return this.$_('Price: %1$s per %2$s appointment', [
-        this.minServicePrice,
-        this.minServiceLength
+        minSessionPrice,
+        minSessionLengthHumanized
       ])
     }
   }
 }
 </script>
-
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
