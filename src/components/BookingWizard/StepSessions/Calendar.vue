@@ -34,6 +34,7 @@ export default {
     selectedDate: {
       get () {
         const activeDate = this.$sm.get('calendar.activeDate')
+        if (!activeDate.day) return null
         return new Date(activeDate.year, activeDate.month, activeDate.day)
       },
       set (date: any) {

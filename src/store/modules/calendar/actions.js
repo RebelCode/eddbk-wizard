@@ -55,14 +55,16 @@ export default {
   },
 
   setActiveDayByTimestamp ({ commit }, { timestamp }) {
+    // reset previously selected date once a service changed
+    commit('set', {
+      key: 'activeDate',
+      value: { year: null, month: null, day: null }
+    })
+
+    // show first available month for the selected service's sessions
     const mDate = moment.unix(timestamp)
     const year = mDate.year()
     const month = mDate.month()
-    const day = mDate.date()
-    commit('set', {
-      key: 'activeDate',
-      value: { year, month, day }
-    })
     commit('set', {
       key: 'visibleMonth',
       value: { year, month }
