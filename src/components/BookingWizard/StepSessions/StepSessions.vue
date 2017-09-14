@@ -105,7 +105,10 @@ export default {
 
     activeMonthDays () { return this.$sm.get('calendar.activeMonthDays') },
 
-    activeDayFormatted () { return moment(this.activeDate).format(dateFormats.displayDay) },
+    activeDayFormatted () {
+      if (!this.activeDate.day) return this.$_('Please select a date')
+      return moment(this.activeDate).format(dateFormats.displayDay)
+    },
 
     selectedSession: {
       get () {
