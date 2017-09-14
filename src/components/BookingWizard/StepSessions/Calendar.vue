@@ -62,3 +62,9 @@ export default {
   }
 }
 </script>
+
+<style>
+.vdp-datepicker__calendar .cell.today {
+    border: 1px solid pink;
+}
+</style>
