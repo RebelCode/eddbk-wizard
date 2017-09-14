@@ -4,7 +4,7 @@
       <tab-content :title="$_('Service')" :before-change="beforeServiceTabSwitch">
         <step-service v-model="selectedService" :list="servicesList" />
       </tab-content>
-      <tab-content :title="$_('Date &amp; time')">
+      <tab-content :title="$_('Date &amp; time')" :before-change="beforeSessionTabSwitch">
         <step-sessions v-if="selectedService" />
       </tab-content>
       <tab-content :title="$_('Payment')">
@@ -47,19 +47,24 @@ export default {
       set (value: Object) {
         this.$sm.set('services.selected', value)
       }
-    }
+    },
+    selectedSession () { return this.$sm.get('calendar.selectedSession') }
   },
 
   methods: {
     beforeServiceTabSwitch () {
       if (this.selectedService) {
         this.$sm.dispatch('calendar/loadSessionsByMonth', {}).then(result => {
-          const firstService = _.first(result)
-          const timestamp = _.get(firstService, 'start')
-          if (timestamp) this.$sm.dispatch('calendar/setActiveDayByTimestamp', { timestamp })
+          const firstSession = _.first(result)
+          const firstSessionTime = _.get(firstSession, 'start')
+          if (firstSessionTime) this.$sm.dispatch('calendar/resetSessionsForNewService', { firstSessionTime })
         })
       }
-      return this.selectedService !== null
+      return !!this.selectedService
+    },
+
+    beforeSessionTabSwitch () {
+      return !!this.selectedSession
     }
   }
 }
