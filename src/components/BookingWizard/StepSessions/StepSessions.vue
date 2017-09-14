@@ -33,7 +33,11 @@
     </div>
     <div class="">
       <div class="">{{ $_('Step 4. Additional notes') }}</div>
-      <textarea rows="8" v-model="form.notes"></textarea>
+      <textarea rows="8" v-model="form.notes" :placeholder="$_('Have you got any special requests for the service provider? If yes, please note them down here')"></textarea>
+    </div>
+    <div class="" v-if="selectedSession">
+      <span>{{ $_('Total cost for booking:') }}</span>
+      <span>{{ selectedSession.data.price.formatted }}</span>
     </div>
   </div>
 </template>
