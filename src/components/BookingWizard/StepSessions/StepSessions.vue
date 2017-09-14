@@ -169,8 +169,11 @@ export default {
 
   watch: {
     activeDateDurations (durations: Array<Object>) {
-      // set first duration as selected by default
       if (!durations.length) return
+      const isActiveDurationInList = this.activeDateDurations.filter(d => d.duration === this.activeDuration).length
+      // no need to change the duration if it's still in the list
+      if (isActiveDurationInList) return
+      // set first duration as selected by default if sth changed
       this.$sm.set('calendar.activeDuration', durations[0].duration)
     }
   },
