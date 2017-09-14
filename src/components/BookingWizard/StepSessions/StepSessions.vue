@@ -10,8 +10,7 @@
     <div class="">
       <div class="">{{ $_('Step 2. Select duration') }}</div>
       <div>
-        <select v-model="activeDuration">
-          <option :value="null">{{ $_('All') }}</option>
+        <select v-model="activeDuration" :disabled="isNoDurations">
           <option v-for="duration in activeDateDurations" :value="duration.duration"> {{ duration.title }}</option>
         </select>
       </div>
@@ -74,6 +73,7 @@ export default {
 
   computed: {
     selectedService () { return this.$sm.get('services.selected') },
+
     activeDateDurations () {
       const durations = this.$sm.get('calendar.activeDateDurations')
       return durations.map(Number).map(d => {
@@ -83,11 +83,7 @@ export default {
         }
       })
     },
-    activeDateSessions () { return this.$sm.get('calendar.activeDateSessions') },
-    activeSessions () { return this.$sm.get('calendar.activeSessions') },
-    activeDate () { return this.$sm.get('calendar.activeDate') },
-    activeMonthDays () { return this.$sm.get('calendar.activeMonthDays') },
-    activeDayFormatted () { return moment(this.activeDate).format(dateFormats.displayDay) },
+
     activeDuration: {
       get () {
         return this.$sm.get('calendar.activeDuration')
@@ -96,6 +92,21 @@ export default {
         this.$sm.set('calendar.activeDuration', duration)
       }
     },
+
+    isNoDurations () {
+      return !this.activeDateDurations.length
+    },
+
+    activeDateSessions () { return this.$sm.get('calendar.activeDateSessions') },
+
+    activeSessions () { return this.$sm.get('calendar.activeSessions') },
+
+    activeDate () { return this.$sm.get('calendar.activeDate') },
+
+    activeMonthDays () { return this.$sm.get('calendar.activeMonthDays') },
+
+    activeDayFormatted () { return moment(this.activeDate).format(dateFormats.displayDay) },
+
     selectedSession: {
       get () {
         return this.$sm.get('calendar.selectedSession')
@@ -153,6 +164,14 @@ export default {
     }
   },
 
+  watch: {
+    activeDateDurations (durations: Array<Object>) {
+      // set first duration as selected by default
+      if (!durations.length) return
+      this.$sm.set('calendar.activeDuration', durations[0].duration)
+    }
+  },
+
   filters: {
     epochToFormat (timestamp: Number, format: String) {
       return moment.unix(timestamp).format(dateFormats[format])
@@ -161,7 +180,6 @@ export default {
 
 }
 </script>
-
 
 <style>
   button.session__item.selected {
