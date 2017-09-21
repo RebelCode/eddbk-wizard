@@ -12,10 +12,18 @@ Vue.use(ServicesPlugin)
 Vue.use(Vuex)
 Vue.config.productionTip = false
 
-/* eslint-disable no-new */
-new Vue({
-  el: '#app',
-  template: '<App/>',
-  store,
-  components: { App }
-})
+const BookingWizard = (options: {
+  el: string,
+  translations: Object
+}) => {
+  const vueInstance = new Vue({
+    el: options.el,
+    template: '<App/>',
+    store,
+    components: { App }
+  })
+
+  return vueInstance
+}
+
+window.BookingWizard = BookingWizard
