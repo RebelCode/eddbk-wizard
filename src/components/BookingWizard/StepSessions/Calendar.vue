@@ -7,7 +7,7 @@
       :day-view-only="true"
       :disabled="datesRange"
       :format="dateFormatter"
-      @changedMonth="updateVisibleMonth"
+      @changedMonth="monthChanged"
       />
   </div>
 </template>
@@ -31,11 +31,13 @@ export default {
         dates: this.$sm.get('calendar.visibleMonthDisabledDates')
       }
     },
+
+    activeDate () { return this.$sm.get('calendar.activeDate') },
+    visibleMonth () { return this.$sm.get('calendar.visibleMonth') },
     selectedDate: {
       get () {
-        const activeDate = this.$sm.get('calendar.activeDate')
-        if (!activeDate.day) return null
-        return new Date(activeDate.year, activeDate.month, activeDate.day)
+        if (!this.activeDate.day) return null
+        return new Date(this.activeDate.year, this.activeDate.month, this.activeDate.day)
       },
       set (date: any) {
         const activeDate = {
@@ -52,13 +54,24 @@ export default {
     dateFormatter (date: string) {
       return moment(date).format(dateFormats.date)
     },
-    updateVisibleMonth (value: Date) {
-      const visibleMonth = {
+    monthChanged (value: Date) {
+      const newMonth = {
         year: value.getFullYear(),
         month: value.getMonth()
       }
-      this.$sm.dispatch('calendar/loadSessionsByMonth', { month: visibleMonth })
-      this.$sm.set('calendar.visibleMonth', visibleMonth)
+      this.updateVisibleMonth(newMonth)
+    },
+    updateVisibleMonth (newMonth: Object) {
+      this.$sm.dispatch('calendar/loadSessionsByMonth', { month: newMonth })
+    }
+  },
+
+  watch: {
+    activeDate (value: Object) {
+      const newMonth = value
+      // no need to update the month if it's not changed
+      if (this.visibleMonth.month === newMonth.month && this.visibleMonth.year === newMonth.year) return true
+      this.updateVisibleMonth(newMonth)
     }
   }
 }

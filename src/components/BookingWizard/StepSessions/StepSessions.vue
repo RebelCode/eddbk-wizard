@@ -103,7 +103,7 @@ export default {
 
     activeDate () { return this.$sm.get('calendar.activeDate') },
 
-    activeMonthDays () { return this.$sm.get('calendar.activeMonthDays') },
+    activeLoadedDays () { return this.$sm.get('calendar.activeLoadedDays') },
 
     activeDayFormatted () {
       if (!this.activeDate.day) return this.$_('Please select a date')
@@ -120,38 +120,40 @@ export default {
     },
 
     currentDayIndex () {
-      const currentIndex = this.activeMonthDays.indexOf(this.activeDate.day)
+      const currentIndex = this.activeLoadedDays.findIndex(i => {
+        return this.activeDate.day === i.day &&
+              this.activeDate.day === i.day &&
+              this.activeDate.day === i.day
+      })
       if (currentIndex < 0) return null
       return currentIndex
     },
 
     nextDayIndex () {
       const nextIndex = this.currentDayIndex + 1
-      if (typeof this.activeMonthDays[nextIndex] === 'undefined') return null
+      if (typeof this.activeLoadedDays[nextIndex] === 'undefined') return null
       return nextIndex
     },
 
     prevDayIndex () {
       const prevIndex = this.currentDayIndex - 1
-      if (typeof this.activeMonthDays[prevIndex] === 'undefined') return null
+      if (typeof this.activeLoadedDays[prevIndex] === 'undefined') return null
       return prevIndex
     }
   },
 
   methods: {
     nextDay () {
-      const nextDay = this.activeMonthDays[this.nextDayIndex]
+      const nextDay = this.activeLoadedDays[this.nextDayIndex]
       if (nextDay) {
-        const nextDate = Object.assign({}, this.activeDate, { day: nextDay })
-        this.$sm.set('calendar.activeDate', nextDate)
+        this.$sm.set('calendar.activeDate', nextDay)
       }
     },
 
     prevDay () {
-      const prevDay = this.activeMonthDays[this.prevDayIndex]
+      const prevDay = this.activeLoadedDays[this.prevDayIndex]
       if (prevDay) {
-        const prevDate = Object.assign({}, this.activeDate, { day: prevDay })
-        this.$sm.set('calendar.activeDate', prevDate)
+        this.$sm.set('calendar.activeDate', prevDay)
       }
     },
 

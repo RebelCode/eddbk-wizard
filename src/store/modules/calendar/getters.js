@@ -27,13 +27,21 @@ export default {
     ], [])
   },
 
-  activeMonthDays (state, getters, rootState, rootGetters) {
-    const days = _.get(state.allSessions, [
-      getters.serviceId,
-      state.activeDate.year,
-      state.activeDate.month
-    ], [])
-    return _.keys(days).map(Number)
+  activeLoadedDays (state, getters, rootState, rootGetters) {
+    const serviceSessions = state.allSessions[getters.serviceId]
+    var flattenCachedDays = []
+    for (const year in serviceSessions) {
+      for (const month in serviceSessions[year]) {
+        for (const day in serviceSessions[year][month]) {
+          flattenCachedDays.push({
+            year: Number(year),
+            month: Number(month),
+            day: Number(day)
+          })
+        }
+      }
+    }
+    return flattenCachedDays
   },
 
   visibleMonthDays (state, getters, rootState, rootGetters) {

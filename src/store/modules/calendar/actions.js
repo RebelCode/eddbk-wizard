@@ -10,7 +10,6 @@ const defaultSessionsRange = () => {
 
 const isMonthCached = (allSessions, serviceId: number, month) => {
   if (!month) return false
-
   return _.has(allSessions, [
     serviceId,
     month.year,
@@ -19,17 +18,29 @@ const isMonthCached = (allSessions, serviceId: number, month) => {
 }
 
 export default {
-  loadSessionsByMonth ({ dispatch, getters, state }, { serviceId, month }) {
+  loadSessionsByMonth ({ dispatch, commit, getters, state }, { serviceId, month }) {
     if (!serviceId) serviceId = getters.serviceId
-
-    if (isMonthCached(state.allSessions, serviceId, month)) return
 
     let mRange
 
     if (!month) {
       mRange = defaultSessionsRange()
     } else {
-      mRange = moment(month).range('month')
+      commit('set', {
+        key: 'visibleMonth',
+        value: month
+      })
+      const start = moment(month).startOf('month')
+      const nextMonth = moment(month).add(1, 'month')
+      const end = nextMonth.endOf('month')
+
+      // check is the next month is already cached
+      if (isMonthCached(state.allSessions, serviceId, {
+        year: nextMonth.year(),
+        month: nextMonth.month()
+      })) return
+
+      mRange = moment.range(start, end)
     }
 
     const start = mRange.start.unix()
