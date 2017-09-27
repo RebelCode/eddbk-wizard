@@ -10,6 +10,5 @@ export type SessionItem = {
 
 export interface SessionsRepoInterface {
   load ({ serviceId: number | string, start: number, end: number }): Promise<Array<SessionItem>>,
-  find (predicate: Function): Array<SessionItem>,
-  all (): Array<SessionItem>
+  find (selector: Object): Array<SessionItem>
 }

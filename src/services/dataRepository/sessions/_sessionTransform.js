@@ -7,6 +7,7 @@ export function getSessionUniqueKey (session: Object) {
 export function prepareSessionObject (session: Object) {
   const uId = getSessionUniqueKey(session)
   session['uId'] = uId
+  session['_id'] = uId
   session['duration'] = session.end - session.start
   return session
 }
