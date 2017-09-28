@@ -1,56 +1,58 @@
 import _ from 'lodash'
 import moment from '@/utils/moment'
+import mingo from 'mingo'
+window.mingo = mingo // debug, delete me
+window.moment = moment // debug, delete me
 
 export default {
   serviceId (state, getters, rootState, rootGetters) {
     return rootGetters['services/selectedId']
   },
 
-  activeDateSessions (state, getters, rootState, rootGetters) {
-    return _.get(state.allSessions, [
-      getters.serviceId,
-      state.activeDate.year,
-      state.activeDate.month,
-      state.activeDate.day
-    ], [])
+  activeDateSessions (state, getters) {
+    if (!state.activeDate.day) return []
+    return mingo.find(state.sessions, {
+      serviceId: getters.serviceId,
+      year: state.visibleMonth.year,
+      month: state.visibleMonth.month,
+      day: state.activeDate.day
+    }).all()
   },
 
   activeDateDurations (state, getters, rootState, rootGetters) {
-    return _.keys(getters.activeDateSessions)
+    return mingo.aggregate(getters.activeDateSessions,
+      [
+        { $group: { _id: '$duration' }},
+        { $sort: { _id: 1 }}
+      ]).map(i => i._id)
   },
 
   activeSessions (state, getters, rootState, rootGetters) {
-    if (!state.activeDuration) return _.reduce(getters.activeDateSessions, _.merge) // flaten
-
-    return _.get(getters.activeDateSessions, [
-      state.activeDuration
-    ], [])
+    if (!state.activeDuration) return []
+    return mingo.find(getters.activeDateSessions, {
+      duration: state.activeDuration
+    }).all()
   },
 
   activeLoadedDays (state, getters, rootState, rootGetters) {
-    const serviceSessions = state.allSessions[getters.serviceId]
-    var flattenCachedDays = []
-    for (const year in serviceSessions) {
-      for (const month in serviceSessions[year]) {
-        for (const day in serviceSessions[year][month]) {
-          flattenCachedDays.push({
-            year: Number(year),
-            month: Number(month),
-            day: Number(day)
-          })
-        }
-      }
-    }
-    return flattenCachedDays
+    return []
   },
 
-  visibleMonthDays (state, getters, rootState, rootGetters) {
-    const days = _.get(state.allSessions, [
-      getters.serviceId,
-      state.visibleMonth.year,
-      state.visibleMonth.month
-    ], [])
-    return _.keys(days).map(Number)
+  visibleMonthSessions (state, getters) {
+    if (!state.visibleMonth.month) return []
+    return mingo.find(state.sessions, {
+      serviceId: getters.serviceId,
+      year: state.visibleMonth.year,
+      month: state.visibleMonth.month
+    }).all()
+  },
+
+  visibleMonthDays (state, getters) {
+    return mingo.aggregate(getters.visibleMonthSessions,
+      [
+        { $group: { _id: '$day' }},
+        { $sort: { _id: 1 }}
+      ]).map(i => i._id)
   },
 
   visibleMonthDisabledDates (state, getters, rootState, rootGetters) {

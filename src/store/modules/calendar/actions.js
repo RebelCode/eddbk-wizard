@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import moment from '@/utils/moment'
-import _ from 'lodash'
+import mingo from 'mingo'
 
 const defaultSessionsRange = () => {
   const start = moment() // now
@@ -8,13 +8,10 @@ const defaultSessionsRange = () => {
   return moment.range(start, end)
 }
 
-const isMonthCached = (allSessions, serviceId: number, month) => {
+const isMonthCached = (sessions, serviceId, { year, month }) => {
   if (!month) return false
-  return _.has(allSessions, [
-    serviceId,
-    month.year,
-    month.month
-  ])
+  const hasSessionsInMonth = mingo.find(sessions, { year, month }).first()
+  return !!hasSessionsInMonth
 }
 
 export default {
@@ -35,10 +32,12 @@ export default {
       const end = nextMonth.endOf('month')
 
       // check is the next month is already cached
-      if (isMonthCached(state.allSessions, serviceId, {
+      const isCached = isMonthCached(state.sessions, serviceId, {
         year: nextMonth.year(),
         month: nextMonth.month()
-      })) return
+      })
+      console.log(isCached)
+      if (isCached) return
 
       mRange = moment.range(start, end)
     }
@@ -60,7 +59,7 @@ export default {
 
   loadSessions ({ commit }, { serviceId, start, end }) {
     return Vue.$repo.sessions.load({ serviceId, start, end }).then(sessions => {
-      commit('insertAsSessionsTree', { collection: sessions })
+      commit('insertArray', { collection: sessions })
       return sessions
     })
   },

@@ -14,6 +14,9 @@ export default {
   name: 'app',
   components: {
     BookingWizard
+  },
+  created () {
+    window.$vm = this // debug
   }
 }
 

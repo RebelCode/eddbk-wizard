@@ -1,5 +1,5 @@
 export default {
-  allSessions: {}, // nested object: [serviceId][year][month][day][duration][sessionKey][{session}]
+  sessions: [],
   selectedSession: null,
   activeDate: {
     year: null,
