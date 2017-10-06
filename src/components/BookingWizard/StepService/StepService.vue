@@ -54,6 +54,7 @@ export default {
         return this.value
       },
       set (value: ?Object) {
+        this.$eventBus.$emit('service:changed', value)
         this.$emit('input', value)
       }
     },
