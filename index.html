@@ -6,7 +6,6 @@
   </head>
   <body>
     <div id="app"></div>
-    <div id="app2"></div>
     <!-- built files will be auto injected -->
     <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -14,8 +13,14 @@
         el: '#app',
         translations: {}
       });
-    })
-    // BookingWizard
+
+      // example of external eventBus usage:
+      bookingWizard.$eventBus
+        .$on('service:changed', function (service) {
+          // do smt with selecter service outside the wizard
+          console.log(service);
+        });
+    });
     </script>
   </body>
 </html>
