@@ -22,7 +22,7 @@ Vagrant.configure(2) do |config|
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
-  config.vm.network "forwarded_port", guest: 80, host: 8080
+  config.vm.network "forwarded_port", guest: 8080, host: 8090
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
@@ -75,8 +75,10 @@ Vagrant.configure(2) do |config|
     apt-get install -y g++
     curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
     apt-get install -y nodejs
-    su vagrant
+    npm config set bin-links false
+    apt-get install -y git
     cd /var/www/project
-    npm install
+    npm install --no-bin-links
+    # npm run dev
   SHELL
 end
