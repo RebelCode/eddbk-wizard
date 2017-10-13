@@ -63,14 +63,16 @@ export default {
     },
     updateVisibleMonth (newMonth: Object) {
       this.$sm.dispatch('calendar/loadSessionsByMonth', { month: newMonth })
+      this.$sm.set('calendar.visibleMonth', newMonth)
     }
   },
 
   watch: {
     activeDate (value: Object) {
+      if (!value.day) return
       const newMonth = value
       // no need to update the month if it's not changed
-      if (this.visibleMonth.month === newMonth.month && this.visibleMonth.year === newMonth.year) return true
+      if (this.visibleMonth.month === newMonth.month && this.visibleMonth.year === newMonth.year) return
       this.updateVisibleMonth(newMonth)
     }
   }
