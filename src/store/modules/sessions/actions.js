@@ -5,8 +5,6 @@ import RangeCache from './_rangeCache.js'
 
 const rangeCache = new RangeCache()
 
-window.rangeCache = rangeCache
-
 export default {
   /*
   * Loads sessions from API.
