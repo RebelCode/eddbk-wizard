@@ -4,6 +4,23 @@ import mingo from 'mingo'
 window.mingo = mingo // debug, delete me
 window.moment = moment // debug, delete me
 
+/*
+* @date { object }
+* @range { string } - 'month' | 'day'
+* @return { object } - { start, end }
+*/
+const getRangeByDate = (date: { year: number, month: number, day?: number }, range: string = 'month') => {
+  const m = moment(date)
+  const start = m.startOf(range).unix()
+  const end = m.endOf(range).unix()
+  return {
+    start,
+    end
+  }
+}
+
+window.getRangeByDate = getRangeByDate
+
 export default {
   sessions (state, getters, rootState, rootGetters) {
     return rootGetters['sessions/all'] // reference for the single source of truth for the sessions
@@ -15,11 +32,13 @@ export default {
 
   activeDateSessions (state, getters) {
     if (!state.activeDate.day) return []
+    const dayRange = getRangeByDate(state.activeDate, 'day')
     return mingo.find(getters.sessions, {
       serviceId: getters.serviceId,
-      year: state.visibleMonth.year,
-      month: state.visibleMonth.month,
-      day: state.activeDate.day
+      start: {
+        $gte: dayRange.start,
+        $lte: dayRange.end
+      }
     }).all()
   },
 
@@ -43,11 +62,14 @@ export default {
   },
 
   visibleMonthSessions (state, getters) {
-    if (!state.visibleMonth.month) return []
+    if (state.visibleMonth.month === null) return []
+    const monthRange = getRangeByDate(state.visibleMonth, 'month')
     return mingo.find(getters.sessions, {
       serviceId: getters.serviceId,
-      year: state.visibleMonth.year,
-      month: state.visibleMonth.month
+      start: {
+        $gte: monthRange.start,
+        $lte: monthRange.end
+      }
     }).all()
   },
 
