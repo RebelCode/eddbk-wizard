@@ -1,12 +1,11 @@
 import _ from 'lodash'
 import moment from '@/utils/moment'
-import mingo from 'mingo'
-window.mingo = mingo // debug, delete me
-window.moment = moment // debug, delete me
+import mingo from '@/utils/mingo'
 
 /*
-* @date { object }
-* @range { string } - 'month' | 'day'
+* Transforms given date object to timestamp ranges
+* @param date { object }
+* @param range { string } - 'month' | 'day'
 * @return { object } - { start, end }
 */
 const getRangeByDate = (date: { year: number, month: number, day?: number }, range: string = 'month') => {
@@ -76,7 +75,15 @@ export default {
   visibleMonthDays (state, getters) {
     return mingo.aggregate(getters.visibleMonthSessions,
       [
-        { $group: { _id: '$day' }},
+        {
+          $group: {
+            _id: {
+              $dayOfMonth: {
+                $epochTimeToDate: '$start'
+              }
+            }
+          }
+        },
         { $sort: { _id: 1 }}
       ]).map(i => i._id)
   },
