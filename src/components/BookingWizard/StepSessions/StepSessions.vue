@@ -18,9 +18,9 @@
     <div class="">
       <div>{{ $_('Step 3. Choose available appointment time') }}</div>
       <div>
-        <span><button @click="prevDay" :disabled="prevDayIndex === null">&#9664;</button></span>
+        <span><button @click="goPrevDate" :disabled="prevDate === null">&#9664;</button></span>
         <span>{{ activeDayFormatted }}</span>
-        <span><button @click="nextDay" :disabled="nextDayIndex === null">&#9654;</button></span>
+        <span><button @click="goNextDate" :disabled="nextDate === null">&#9654;</button></span>
       </div>
       <div>
         <button
@@ -101,7 +101,19 @@ export default {
 
     activeSessions () { return this.$sm.get('calendar.activeSessions') },
 
-    activeDate () { return this.$sm.get('calendar.activeDate') },
+    activeDate: {
+      get () {
+        return this.$sm.get('calendar.activeDate')
+      },
+
+      set (date: Object) {
+        this.$sm.set('calendar.activeDate', date)
+      }
+    },
+
+    nextDate () { return this.$sm.get('calendar.nextDate') },
+
+    prevDate () { return this.$sm.get('calendar.prevDate') },
 
     activeLoadedDays () { return this.$sm.get('calendar.activeLoadedDays') },
 
@@ -117,44 +129,16 @@ export default {
       set (session: {}) {
         this.$sm.set('calendar.selectedSession', session)
       }
-    },
-
-    currentDayIndex () {
-      const currentIndex = this.activeLoadedDays.findIndex(i => {
-        return this.activeDate.day === i.day &&
-              this.activeDate.day === i.day &&
-              this.activeDate.day === i.day
-      })
-      if (currentIndex < 0) return null
-      return currentIndex
-    },
-
-    nextDayIndex () {
-      const nextIndex = this.currentDayIndex + 1
-      if (typeof this.activeLoadedDays[nextIndex] === 'undefined') return null
-      return nextIndex
-    },
-
-    prevDayIndex () {
-      const prevIndex = this.currentDayIndex - 1
-      if (typeof this.activeLoadedDays[prevIndex] === 'undefined') return null
-      return prevIndex
     }
   },
 
   methods: {
-    nextDay () {
-      const nextDay = this.activeLoadedDays[this.nextDayIndex]
-      if (nextDay) {
-        this.$sm.set('calendar.activeDate', nextDay)
-      }
+    goNextDate () {
+      this.activeDate = this.nextDate
     },
 
-    prevDay () {
-      const prevDay = this.activeLoadedDays[this.prevDayIndex]
-      if (prevDay) {
-        this.$sm.set('calendar.activeDate', prevDay)
-      }
+    goPrevDate () {
+      this.activeDate = this.prevDate
     },
 
     showLoader () {

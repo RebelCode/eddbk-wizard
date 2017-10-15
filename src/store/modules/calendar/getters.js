@@ -17,7 +17,14 @@ const getRangeByDate = (date: { year: number, month: number, day?: number }, ran
   }
 }
 
-window.getRangeByDate = getRangeByDate
+const timestampToDate = (timestamp) => {
+  const m = moment.unix(timestamp)
+  return {
+    year: m.year(),
+    month: m.month(),
+    day: m.date()
+  }
+}
 
 export default {
   sessions (state, getters, rootState, rootGetters) {
@@ -57,6 +64,38 @@ export default {
 
   activeLoadedDays (state, getters, rootState, rootGetters) {
     return []
+  },
+
+  nextDate (state, getters) {
+    if (!state.activeDate.day) return null
+    const dayRange = getRangeByDate(state.activeDate, 'day')
+    const firstNextSession = mingo.find(getters.sessions, {
+      serviceId: getters.serviceId,
+      start: {
+        $gt: dayRange.end
+      }
+    })
+    .sort({ start: 1 })
+    .first()
+
+    if (firstNextSession) return timestampToDate(firstNextSession.start)
+    return null
+  },
+
+  prevDate (state, getters) {
+    if (!state.activeDate.day) return null
+    const dayRange = getRangeByDate(state.activeDate, 'day')
+    const firstPrevSession = mingo.find(getters.sessions, {
+      serviceId: getters.serviceId,
+      start: {
+        $lt: dayRange.start
+      }
+    })
+    .sort({ start: -1 })
+    .first()
+
+    if (firstPrevSession) return timestampToDate(firstPrevSession.start)
+    return null
   },
 
   visibleMonthSessions (state, getters) {
