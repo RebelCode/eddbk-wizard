@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import moment from '@/utils/moment'
 import mingo from '@/utils/mingo'
 
@@ -86,14 +85,5 @@ export default {
         },
         { $sort: { _id: 1 }}
       ]).map(i => i._id)
-  },
-
-  visibleMonthDisabledDates (state, getters, rootState, rootGetters) {
-    if (!getters.visibleMonthDays) return []
-    const daysInMonth = moment([state.visibleMonth.year, state.visibleMonth.month]).daysInMonth()
-    const monthRange = _.range(1, daysInMonth + 1)
-    const disabledDays = monthRange.filter(d => !getters.visibleMonthDays.includes(d))
-    return disabledDays.map(date => new Date(state.visibleMonth.year, state.visibleMonth.month, date))
   }
-
 }
