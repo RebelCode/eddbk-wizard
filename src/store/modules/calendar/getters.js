@@ -1,8 +1,30 @@
-import _ from 'lodash'
 import moment from '@/utils/moment'
-import mingo from 'mingo'
-window.mingo = mingo // debug, delete me
-window.moment = moment // debug, delete me
+import mingo from '@/utils/mingo'
+
+/*
+* Transforms given date object to timestamp ranges
+* @param date { object }
+* @param range { string } - 'month' | 'day'
+* @return { object } - { start, end }
+*/
+const getRangeByDate = (date: { year: number, month: number, day?: number }, range: string = 'month') => {
+  const m = moment(date)
+  const start = m.startOf(range).unix()
+  const end = m.endOf(range).unix()
+  return {
+    start,
+    end
+  }
+}
+
+const timestampToDate = (timestamp) => {
+  const m = moment.unix(timestamp)
+  return {
+    year: m.year(),
+    month: m.month(),
+    day: m.date()
+  }
+}
 
 export default {
   sessions (state, getters, rootState, rootGetters) {
@@ -15,11 +37,13 @@ export default {
 
   activeDateSessions (state, getters) {
     if (!state.activeDate.day) return []
+    const dayRange = getRangeByDate(state.activeDate, 'day')
     return mingo.find(getters.sessions, {
       serviceId: getters.serviceId,
-      year: state.visibleMonth.year,
-      month: state.visibleMonth.month,
-      day: state.activeDate.day
+      start: {
+        $gte: dayRange.start,
+        $lte: dayRange.end
+      }
     }).all()
   },
 
@@ -42,29 +66,63 @@ export default {
     return []
   },
 
+  nextDate (state, getters) {
+    if (!state.activeDate.day) return null
+    const dayRange = getRangeByDate(state.activeDate, 'day')
+    const firstNextSession = mingo.find(getters.sessions, {
+      serviceId: getters.serviceId,
+      start: {
+        $gt: dayRange.end
+      }
+    })
+    .sort({ start: 1 })
+    .first()
+
+    if (firstNextSession) return timestampToDate(firstNextSession.start)
+    return null
+  },
+
+  prevDate (state, getters) {
+    if (!state.activeDate.day) return null
+    const dayRange = getRangeByDate(state.activeDate, 'day')
+    const firstPrevSession = mingo.find(getters.sessions, {
+      serviceId: getters.serviceId,
+      start: {
+        $lt: dayRange.start
+      }
+    })
+    .sort({ start: -1 })
+    .first()
+
+    if (firstPrevSession) return timestampToDate(firstPrevSession.start)
+    return null
+  },
+
   visibleMonthSessions (state, getters) {
-    if (!state.visibleMonth.month) return []
+    if (state.visibleMonth.month === null) return []
+    const monthRange = getRangeByDate(state.visibleMonth, 'month')
     return mingo.find(getters.sessions, {
       serviceId: getters.serviceId,
-      year: state.visibleMonth.year,
-      month: state.visibleMonth.month
+      start: {
+        $gte: monthRange.start,
+        $lte: monthRange.end
+      }
     }).all()
   },
 
   visibleMonthDays (state, getters) {
     return mingo.aggregate(getters.visibleMonthSessions,
       [
-        { $group: { _id: '$day' }},
+        {
+          $group: {
+            _id: {
+              $dayOfMonth: {
+                $epochTimeToDate: '$start'
+              }
+            }
+          }
+        },
         { $sort: { _id: 1 }}
       ]).map(i => i._id)
-  },
-
-  visibleMonthDisabledDates (state, getters, rootState, rootGetters) {
-    if (!getters.visibleMonthDays) return []
-    const daysInMonth = moment([state.visibleMonth.year, state.visibleMonth.month]).daysInMonth()
-    const monthRange = _.range(1, daysInMonth + 1)
-    const disabledDays = monthRange.filter(d => !getters.visibleMonthDays.includes(d))
-    return disabledDays.map(date => new Date(state.visibleMonth.year, state.visibleMonth.month, date))
   }
-
 }

@@ -5,7 +5,7 @@
       :inline="true"
       :full-month-name="true"
       :day-view-only="true"
-      :disabled="datesRange"
+      :disabled="calendarDisabledDates"
       :format="dateFormatter"
       @changedMonth="monthChanged"
       />
@@ -15,6 +15,7 @@
 <script>
 // @flow
 import Datepicker from 'vuejs-datepicker'
+import _ from 'lodash'
 import moment from '@/utils/moment'
 
 import { dateFormats } from '@/config'
@@ -25,15 +26,12 @@ export default {
   },
 
   computed: {
-    datesRange () {
-      return {
-        to: moment().subtract(1, 'days').toDate(), // disable all days before today
-        dates: this.$sm.get('calendar.visibleMonthDisabledDates')
-      }
-    },
-
     activeDate () { return this.$sm.get('calendar.activeDate') },
+
     visibleMonth () { return this.$sm.get('calendar.visibleMonth') },
+
+    visibleMonthDays () { return this.$sm.get('calendar.visibleMonthDays') },
+
     selectedDate: {
       get () {
         if (!this.activeDate.day) return null
@@ -47,6 +45,22 @@ export default {
         }
         this.$sm.set('calendar.activeDate', activeDate)
       }
+    },
+
+    // inversion for visibleMonthDays, converted to Date objects
+    visibleMonthDisabledDates () {
+      if (!this.visibleMonthDays) return []
+      const daysInMonth = moment([this.visibleMonth.year, this.visibleMonth.month]).daysInMonth()
+      const monthRange = _.range(1, daysInMonth + 1)
+      const disabledDays = monthRange.filter(d => !this.visibleMonthDays.includes(d))
+      return disabledDays.map(date => new Date(this.visibleMonth.year, this.visibleMonth.month, date))
+    },
+
+    calendarDisabledDates () {
+      return {
+        to: moment().subtract(1, 'days').toDate(), // disable all days before today
+        dates: this.visibleMonthDisabledDates
+      }
     }
   },
 
@@ -54,6 +68,7 @@ export default {
     dateFormatter (date: string) {
       return moment(date).format(dateFormats.date)
     },
+
     monthChanged (value: Date) {
       const newMonth = {
         year: value.getFullYear(),
@@ -61,6 +76,7 @@ export default {
       }
       this.updateVisibleMonth(newMonth)
     },
+
     updateVisibleMonth (newMonth: Object) {
       this.$sm.dispatch('calendar/loadSessionsByMonth', { month: newMonth })
       this.$sm.set('calendar.visibleMonth', newMonth)

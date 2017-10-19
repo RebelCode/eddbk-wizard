@@ -1,14 +1,14 @@
 import Vue from 'vue'
-import { prepareSessionObject } from './_sessionTransform.js'
 import _ from 'lodash'
-import RangeCache from './_rangeCache.js'
+import { prepareSessionObject } from './sessionTransform.js'
+import RangeCache from './rangeCache.js'
 
 const rangeCache = new RangeCache()
 
 export default {
   /*
-  * Loads sessions from API.
-  * Catches queries
+  * Loads sessions from API
+  * Caches queries
   */
   load ({ commit }, { serviceId, start, end }) {
     const uncachedRange = rangeCache.uncached({ serviceId, start, end })
