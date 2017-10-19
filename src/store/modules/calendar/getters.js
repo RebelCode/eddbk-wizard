@@ -5,13 +5,17 @@ window.mingo = mingo // debug, delete me
 window.moment = moment // debug, delete me
 
 export default {
+  sessions (state, getters, rootState, rootGetters) {
+    return rootGetters['sessions/all'] // reference for the single source of truth for the sessions
+  },
+
   serviceId (state, getters, rootState, rootGetters) {
     return rootGetters['services/selectedId']
   },
 
   activeDateSessions (state, getters) {
     if (!state.activeDate.day) return []
-    return mingo.find(state.sessions, {
+    return mingo.find(getters.sessions, {
       serviceId: getters.serviceId,
       year: state.visibleMonth.year,
       month: state.visibleMonth.month,
@@ -40,7 +44,7 @@ export default {
 
   visibleMonthSessions (state, getters) {
     if (!state.visibleMonth.month) return []
-    return mingo.find(state.sessions, {
+    return mingo.find(getters.sessions, {
       serviceId: getters.serviceId,
       year: state.visibleMonth.year,
       month: state.visibleMonth.month

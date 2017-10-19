@@ -16,7 +16,6 @@ export default {
     BookingWizard
   },
   created () {
-    window.$vm = this // debug
   }
 }
 
