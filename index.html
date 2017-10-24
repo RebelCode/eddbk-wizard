@@ -9,20 +9,20 @@
     <div id="app"></div>
     <!-- built files will be auto injected -->
     <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      // get default configuration inside the Bottle instance
-      var bottle = BookingWizardManager.getDefaultBottle()
+      document.addEventListener('DOMContentLoaded', function () {
+        // get default configuration inside the Bottle instance
+        var bottle = BookingWizardManager.getDefaultBottle()
 
-      bottle.container.config.API_BASE_URL =  "http://127.0.0.1:8000";
-      // override some service with costom realization
-      // bottle.service('translate', function () {
-      //   return function (format, params, context) {
-      //     return format
-      //   }
-      // });
-      // create new wizard using the configured service container (inside bottle)
-      bookingWizard = BookingWizardManager.create(bottle);
-    });
+        bottle.container.config.API_BASE_URL = "http://127.0.0.1:8000";
+        // override some service with costom realization
+        // bottle.service('translate', function () {
+        //   return function (format, params, context) {
+        //     return format
+        //   }
+        // });
+        // create new wizard using the configured service container (inside bottle)
+        bookingWizard = BookingWizardManager.create(bottle);
+      });
     </script>
   </body>
 </html>
