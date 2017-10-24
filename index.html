@@ -15,11 +15,11 @@
 
       bottle.container.config.API_BASE_URL =  "http://127.0.0.1:8000";
       // override some service with costom realization
-      bottle.service('translate', function () {
-        return function (format, params, context) {
-          return 'Fucking ' + format
-        }
-      });
+      // bottle.service('translate', function () {
+      //   return function (format, params, context) {
+      //     return format
+      //   }
+      // });
       // create new wizard using the configured service container (inside bottle)
       bookingWizard = BookingWizardManager.create(bottle);
     });
