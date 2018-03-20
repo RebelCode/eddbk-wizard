@@ -18,8 +18,6 @@ import Datepicker from 'vuejs-datepicker'
 import _ from 'lodash'
 import moment from '@/utils/moment'
 
-import { dateFormats } from '@/config'
-
 export default {
   components: {
     Datepicker
@@ -66,7 +64,7 @@ export default {
 
   methods: {
     dateFormatter (date: string) {
-      return moment(date).format(dateFormats.date)
+      return moment(date).format(this.$config.dateFormats.date)
     },
 
     monthChanged (value: Date) {

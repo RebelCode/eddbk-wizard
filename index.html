@@ -5,21 +5,24 @@
     <title>edd-spa</title>
   </head>
   <body>
+    <div id="app2"></div>
     <div id="app"></div>
     <!-- built files will be auto injected -->
     <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      var bookingWizard = window.BookingWizard({
-        el: '#app',
-        translations: {}
-      });
+      document.addEventListener('DOMContentLoaded', function () {
+        // get default configuration inside the Bottle instance
+        var bottle = BookingWizardManager.getDefaultBottle()
 
-      // example of external eventBus usage:
-      bookingWizard.$eventBus
-        .$on('service:changed', function (service) {
-          // do smt with selecter service outside the wizard
-        });
-    });
+        bottle.container.config.API_BASE_URL = "http://192.168.33.10:8000";
+        // override some service with costom realization
+        // bottle.service('translate', function () {
+        //   return function (format, params, context) {
+        //     return format
+        //   }
+        // });
+        // create new wizard using the configured service container (inside bottle)
+        bookingWizard = BookingWizardManager.create(bottle);
+      });
     </script>
   </body>
 </html>

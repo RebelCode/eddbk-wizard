@@ -4,13 +4,10 @@ import di from '@/services/di'
 import { HttpHandlerInterface } from './interfaces/HttpHandlerInterface.js'
 import { ApiInterface } from './interfaces/ApiInterface.js'
 import axios from 'axios'
-import { apiSettings } from '@/config'
 
-di.constant('API_BASE_URL', apiSettings.baseUrl)
-
-di.factory('http', function (container: { API_BASE_URL: string }) {
+di.factory('http', function (container: { config: { API_BASE_URL: string } }) {
   // axiosMocks(axios, ['/services', '/sessions'])
-  axios.defaults.baseURL = container.API_BASE_URL
+  axios.defaults.baseURL = container.config.API_BASE_URL
   return {
     get: axios.get,
     post: axios.post

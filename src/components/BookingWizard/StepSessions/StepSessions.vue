@@ -45,10 +45,11 @@
 // @flow
 import Calendar from './Calendar.vue'
 import moment from '@/utils/moment'
-import { dateFormats } from '@/config'
 
 let loadingTimer = null
 const loadingTimerDelay = 100
+
+import Vue from 'vue'
 
 export default {
   components: {
@@ -119,7 +120,7 @@ export default {
 
     activeDayFormatted () {
       if (!this.activeDate.day) return this.$_('Please select a date')
-      return moment(this.activeDate).format(dateFormats.displayDay)
+      return moment(this.activeDate).format(this.$config.dateFormats.displayDay)
     },
 
     selectedSession: {
@@ -166,7 +167,7 @@ export default {
 
   filters: {
     epochToFormat (timestamp: Number, format: String) {
-      return moment.unix(timestamp).format(dateFormats[format])
+      return moment.unix(timestamp).format(Vue.$config.dateFormats[format])
     }
   }
 
