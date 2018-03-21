@@ -2,12 +2,12 @@
 
 import di from '@/services/di.js'
 
-        const dateFormats = {
-          month: 'MM/YYYY',
-          date: 'DD/MM/YYYY',
-          time: 'h:m a',
-          displayDay: 'D MMMM'
-        }
+const dateFormats = {
+  month: 'MM/YYYY',
+  date: 'DD/MM/YYYY',
+  time: 'h:mm a',
+  displayDay: 'D MMMM'
+}
 
 di.service('config', function () {
   return {

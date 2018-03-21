@@ -19,7 +19,7 @@ di.factory('api', function (container: { http: HttpHandlerInterface }) {
 
   const api: ApiInterface = {
     fetchServices () {
-      return http.get('/services')
+      return http.get('/service')
     },
 
     fetchSessions ({ serviceId, start, end }) {

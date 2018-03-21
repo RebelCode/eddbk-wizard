@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <BookingWizard/>
+    <BookingWizard color="#17a7dd" step-size="sm"/>
   </div>
 </template>
 
@@ -18,5 +18,16 @@ export default {
   created () {
   }
 }
-
 </script>
+
+<style lang="scss">
+  $color: #17a7dd;
+  .edd-booking-wizard {
+    .wizard-icon-circle.checked {
+      background-color: $color;
+    }
+    .session__item.selected {
+      background-color: $color;
+    }
+  }
+</style>

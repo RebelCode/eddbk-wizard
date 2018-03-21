@@ -1,16 +1,18 @@
 <template>
   <div>
-    <label>{{ $_('Select a service') }}</label>
-    <multiselect
-      v-model="selectedService"
-      :options="list"
-      track-by="title"
-      label="title"
-      :searchable="false"
-      :allow-empty="false"
-      :show-labels="false"
+    <div class="inline-form-control">
+      <label>{{ $_('Select a service') }}</label>
+      <multiselect
+              v-model="selectedService"
+              :options="list"
+              track-by="title"
+              label="title"
+              :searchable="false"
+              :allow-empty="false"
+              :show-labels="false"
       >
-    </multiselect>
+      </multiselect>
+    </div>
 
     <div v-if="selectedService" class="service__image">
       <img :src="selectedService.imageSrc" alt="">

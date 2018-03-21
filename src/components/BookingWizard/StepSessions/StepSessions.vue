@@ -1,38 +1,43 @@
 <template>
   <div :class="{ 'session-loading': ui.sessionLoading }">
-    <div class="">
+    <div class="edd-booking-wizard__info">
       {{ $_('You are booking a ') }} <strong>{{ selectedService.title }}</strong>
     </div>
-    <div class="">
-      <div class="">{{ $_('Step 1. Select a date') }}</div>
+    <div class="inline-form-control">
+      <label>{{ $_('Select a date') }}</label>
       <calendar/>
     </div>
-    <div class="">
-      <div class="">{{ $_('Step 2. Select duration') }}</div>
+    <div class="inline-form-control">
+      <label>{{ $_('Select duration') }}</label>
       <div>
-        <select v-model="activeDuration" :disabled="isNoDurations">
+        <select v-model="activeDuration" :disabled="isNoDurations" class="eddb-control">
           <option v-for="duration in activeDateDurations" :value="duration.duration"> {{ duration.title }}</option>
         </select>
       </div>
     </div>
-    <div class="">
-      <div>{{ $_('Step 3. Choose available appointment time') }}</div>
-      <div>
-        <span><button @click="goPrevDate" :disabled="prevDate === null">&#9664;</button></span>
-        <span>{{ activeDayFormatted }}</span>
-        <span><button @click="goNextDate" :disabled="nextDate === null">&#9654;</button></span>
-      </div>
-      <div>
-        <button
-          :class="{ selected: session === selectedSession }"
-          v-for="session in activeSessions"
-          @click="selectedSession = session"
-          class="session__item"> {{ session.start | epochToFormat('time') }} — {{ session.end | epochToFormat('time') }}</button>
+    <div class="inline-form-control">
+      <label>{{ $_('Select available time') }}</label>
+      <div class="eddb-control eddb-control-appointment">
+        <div class="eddb-control-appointment__header">
+          <span><button @click="goPrevDate" :disabled="prevDate === null">&#9664;</button></span>
+          <span>{{ activeDayFormatted }}</span>
+          <span><button @click="goNextDate" :disabled="nextDate === null">&#9654;</button></span>
+        </div>
+        <div class="eddb-control-appointment__body" v-if="activeSessions.length">
+          <button
+                  :class="{ selected: session === selectedSession }"
+                  v-for="session in activeSessions"
+                  @click="selectedSession = session"
+                  class="session__item"
+          >
+            {{ session.start | epochToFormat('time') }}
+          </button>
+        </div>
       </div>
     </div>
-    <div class="">
-      <div class="">{{ $_('Step 4. Additional notes') }}</div>
-      <textarea rows="8" v-model="form.notes" :placeholder="$_('Have you got any special requests for the service provider? If yes, please note them down here')"></textarea>
+    <div class="inline-form-control">
+      <label>{{ $_('Additional notes') }}</label>
+      <textarea rows="4" v-model="form.notes" class="eddb-control" :placeholder="$_('Have you got any special requests for the service provider? If yes, please note them down here')"></textarea>
     </div>
     <div class="" v-if="selectedSession">
       <span>{{ $_('Total cost for booking:') }}</span>
@@ -175,12 +180,6 @@ export default {
 </script>
 
 <style>
-  button.session__item.selected {
-    background: #e74c3c;
-    color: #fff;
-    border: none;
-    border-radius: 50px;
-  }
   .session-loading {
     position: relative;
     filter: blur(3px);

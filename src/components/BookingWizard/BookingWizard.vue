@@ -1,6 +1,13 @@
 <template>
-  <div>
-    <form-wizard :title="$_('Book an appointment')" subtitle="" :nextButtonText="$_('Next')" :baclButtonText="$_('Back')" :finishButtonText="$_('Finish')">
+  <div class="edd-booking-wizard">
+    <form-wizard :title="$_('Book an Appointment')"
+                 v-bind="$attrs"
+                 subtitle=""
+                 :nextButtonText="$_('Next')"
+                 :backButtonText="$_('Back')"
+                 :finishButtonText="$_('Finish')"
+
+    >
       <tab-content :title="$_('Service')" :before-change="beforeServiceTabSwitch">
         <step-service v-model="selectedService" :list="servicesList" />
       </tab-content>
@@ -13,6 +20,28 @@
       <tab-content :title="$_('Confirmation')">
         Confirmation tab content
       </tab-content>
+
+      <template slot="footer" scope="props">
+        <div class=wizard-footer-left>
+          <div v-if="selectedService && props.activeTabIndex === 0">
+            <div>Starting at {{ selectedService.sessionLengths[0].price.formatted }} (for 45 minutes)</div>
+            <div style="opacity: .6">Other options available in the next step</div>
+          </div>
+        </div>
+        <div class="wizard-footer-right">
+          <wizard-button v-if="props.activeTabIndex > 0 && !props.isLastStep"
+                         @click.native="props.prevTab()"
+                         class="wizard-footer-back"
+                         :style="props.fillButtonStyle">
+            {{ $_('Back') }}
+          </wizard-button>
+
+          <wizard-button @click.native="props.isLastStep ? alert('Done') : props.nextTab()"
+                         :class="['wizard-footer-right', props.isLastStep ? 'finish-button' : '']"
+                         :style="props.fillButtonStyle"
+          >{{props.isLastStep ? $_('Done') : $_('Next')}}</wizard-button>
+        </div>
+      </template>
     </form-wizard>
   </div>
 </template>
@@ -20,7 +49,7 @@
 <script>
 // @flow
 import _ from 'lodash'
-import { FormWizard, TabContent } from 'vue-form-wizard'
+import { FormWizard, TabContent, WizardButton } from 'vue-form-wizard'
 import StepService from './StepService/StepService.vue'
 import StepSessions from './StepSessions/StepSessions.vue'
 
@@ -28,6 +57,7 @@ export default {
   components: {
     FormWizard,
     TabContent,
+    WizardButton,
     StepService,
     StepSessions
   },
