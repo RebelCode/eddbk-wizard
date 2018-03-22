@@ -29,5 +29,10 @@ export default {
     .session__item.selected {
       background-color: $color;
     }
+    .vdp-datepicker__calendar .cell.selected, .vdp-datepicker__calendar .cell.selected:hover {
+      background-color: $color !important;
+      border-color: $color !important;
+      color: #fff;
+    }
   }
 </style>

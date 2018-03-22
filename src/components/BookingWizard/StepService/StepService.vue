@@ -14,12 +14,14 @@
       </multiselect>
     </div>
 
-    <div v-if="selectedService" class="service__image">
-      <img :src="selectedService.imageSrc" alt="">
-    </div>
+    <div class="service">
+      <div v-if="selectedService" class="service__image">
+        <img :src="selectedService.imageSrc" alt="">
+      </div>
 
-    <div v-if="selectedService" class="service__description">
-      {{ selectedService.description }}
+      <div v-if="selectedService" class="service__description">
+        {{ selectedService.description }}
+      </div>
     </div>
   </div>
 </template>

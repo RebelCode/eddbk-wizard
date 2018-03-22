@@ -1,5 +1,6 @@
 import moment from '@/utils/moment'
 import mingo from '@/utils/mingo'
+import Vue from 'vue'
 
 /*
 * Transforms given date object to timestamp ranges
@@ -29,6 +30,18 @@ const timestampToDate = (timestamp) => {
 export default {
   sessions (state, getters, rootState, rootGetters) {
     return rootGetters['sessions/all'] // reference for the single source of truth for the sessions
+  },
+
+  sessionInfo (state, getters) {
+    const start = moment.unix(state.selectedSession.start)
+    const duration = state.selectedSession.end - state.selectedSession.start
+
+    return Vue.$_('You have selected %(duration)s appointment, starting at %(time)s on %(date)s. The price is of %(price)s.', {
+      duration: moment.duration(duration, 'seconds').humanize(),
+      time: start.format(Vue.$config.dateFormats.time),
+      date: start.format(Vue.$config.dateFormats.fullDate),
+      price: state.selectedSession.data.price.formatted
+    })
   },
 
   serviceId (state, getters, rootState, rootGetters) {

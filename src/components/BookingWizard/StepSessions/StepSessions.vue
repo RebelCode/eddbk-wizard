@@ -39,10 +39,6 @@
       <label>{{ $_('Additional notes') }}</label>
       <textarea rows="4" v-model="form.notes" class="eddb-control" :placeholder="$_('Have you got any special requests for the service provider? If yes, please note them down here')"></textarea>
     </div>
-    <div class="" v-if="selectedSession">
-      <span>{{ $_('Total cost for booking:') }}</span>
-      <span>{{ selectedSession.data.price.formatted }}</span>
-    </div>
   </div>
 </template>
 
@@ -50,10 +46,6 @@
 // @flow
 import Calendar from './Calendar.vue'
 import moment from '@/utils/moment'
-
-let loadingTimer = null
-const loadingTimerDelay = 100
-
 import Vue from 'vue'
 
 export default {
@@ -148,13 +140,10 @@ export default {
     },
 
     showLoader () {
-      loadingTimer = setTimeout(() => {
-        this.ui.sessionLoading = true
-      }, loadingTimerDelay)
+      this.ui.sessionLoading = true
     },
 
     hideLoader () {
-      clearTimeout(loadingTimer)
       this.ui.sessionLoading = false
     }
   },

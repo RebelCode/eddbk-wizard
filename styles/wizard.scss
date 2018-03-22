@@ -24,5 +24,23 @@
     color: $black !important;
     border-color: $dark-gray !important;
   }
+
+  .service {
+    display: flex;
+
+    &__image {
+      text-align: center;
+      width: 35%;
+      padding: .5rem;
+      flex-shrink: 0;
+      img {
+        border-radius: $border-radius;
+      }
+    }
+
+    &__description {
+      padding-bottom: .5rem;
+    }
+  }
 }
 

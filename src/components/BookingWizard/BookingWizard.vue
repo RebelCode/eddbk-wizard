@@ -22,14 +22,17 @@
       </tab-content>
 
       <template slot="footer" scope="props">
-        <div class=wizard-footer-left>
-          <div v-if="selectedService && props.activeTabIndex === 0">
-            <div>{{ serviceInfo.pricePreview }}</div>
-            <div style="opacity: .6" v-if="serviceInfo.isOtherSessionsAvailable">
-              {{ $_('Other options available in the next step') }}
-            </div>
+        <div class="wizard-footer-left" v-if="selectedService && props.activeTabIndex === 0">
+          <div>{{ serviceInfo.pricePreview }}</div>
+          <div style="opacity: .6" v-if="serviceInfo.isOtherSessionsAvailable">
+            {{ $_('Other options available in the next step') }}
           </div>
         </div>
+
+        <div class="wizard-footer-clear" v-if="selectedSession && props.activeTabIndex === 1">
+          {{ sessionInfo }} {{ $_('Click Next to start the payment process.') }}
+        </div>
+
         <div class="wizard-footer-right">
           <wizard-button v-if="props.activeTabIndex > 0 && !props.isLastStep"
                          @click.native="props.prevTab()"
@@ -54,7 +57,7 @@ import _ from 'lodash'
 import { FormWizard, TabContent, WizardButton } from 'vue-form-wizard'
 import StepService from './StepService/StepService.vue'
 import StepSessions from './StepSessions/StepSessions.vue'
-import { mapGetters } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   components: {
@@ -72,6 +75,12 @@ export default {
   computed: {
     ...mapGetters('services', [
       'serviceInfo'
+    ]),
+    ...mapState('calendar', [
+      'selectedSession'
+    ]),
+    ...mapGetters('calendar', [
+      'sessionInfo'
     ]),
     servicesList () {
       return this.$sm.get('services.list')

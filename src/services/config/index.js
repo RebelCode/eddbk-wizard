@@ -6,7 +6,8 @@ const dateFormats = {
   month: 'MM/YYYY',
   date: 'DD/MM/YYYY',
   time: 'h:mm a',
-  displayDay: 'D MMMM'
+  displayDay: 'D MMMM',
+  fullDate: 'dddd Do MMMM YYYY'
 }
 
 di.service('config', function () {
