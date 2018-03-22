@@ -24,8 +24,10 @@
       <template slot="footer" scope="props">
         <div class=wizard-footer-left>
           <div v-if="selectedService && props.activeTabIndex === 0">
-            <div>Starting at {{ selectedService.sessionLengths[0].price.formatted }} (for 45 minutes)</div>
-            <div style="opacity: .6">Other options available in the next step</div>
+            <div>{{ serviceInfo.pricePreview }}</div>
+            <div style="opacity: .6" v-if="serviceInfo.isOtherSessionsAvailable">
+              {{ $_('Other options available in the next step') }}
+            </div>
           </div>
         </div>
         <div class="wizard-footer-right">
@@ -52,6 +54,7 @@ import _ from 'lodash'
 import { FormWizard, TabContent, WizardButton } from 'vue-form-wizard'
 import StepService from './StepService/StepService.vue'
 import StepSessions from './StepSessions/StepSessions.vue'
+import { mapGetters } from 'vuex'
 
 export default {
   components: {
@@ -67,6 +70,9 @@ export default {
   },
 
   computed: {
+    ...mapGetters('services', [
+      'serviceInfo'
+    ]),
     servicesList () {
       return this.$sm.get('services.list')
     },
