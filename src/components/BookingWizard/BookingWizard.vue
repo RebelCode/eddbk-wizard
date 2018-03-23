@@ -27,11 +27,13 @@
         </div>
 
         <div class="wizard-footer-clear" v-if="selectedSession && props.activeTabIndex === 2">
-          {{ sessionInfo }} {{ $_('Click Next to start the payment process.') }}
+          {{ sessionInfo }}
+          <!--{{ $_('Click Add to cart to continue.') }}-->
         </div>
 
         <div class="wizard-footer-right">
-          <wizard-button v-if="props.activeTabIndex > 0 && !props.isLastStep"
+          <!--&& !props.isLastStep-->
+          <wizard-button v-if="props.activeTabIndex > 0"
                          @click.native="props.prevTab()"
                          class="wizard-footer-back"
                          :style="props.fillButtonStyle">
@@ -41,7 +43,7 @@
           <wizard-button @click.native="props.isLastStep ? alert('Done') : props.nextTab()"
                          :class="['wizard-footer-right', props.isLastStep ? 'finish-button' : '']"
                          :style="props.fillButtonStyle"
-          >{{props.isLastStep ? $_('Done') : $_('Next')}}</wizard-button>
+          >{{props.isLastStep ? $_('Add to cart') : $_('Next')}}</wizard-button>
         </div>
       </template>
     </form-wizard>
@@ -108,7 +110,7 @@ export default {
     },
 
     beforeDateTabSwitch () {
-      return !!this.activeDate
+      return !!this.activeDate.day
     },
 
     beforeSessionTabSwitch () {

@@ -59,6 +59,8 @@ export default {
   created () {
     this.$eventBus.$on('fetchingSessions:start', this.showLoader)
     this.$eventBus.$on('fetchingSessions:end', this.hideLoader)
+
+    this.selectFirstAvailableDuration()
   },
 
   computed: {
@@ -97,6 +99,14 @@ export default {
     }
   },
 
+  watch: {
+    activeDateDurations (durations: Array<Object>) {
+      console.info('duration watcher change', durations)
+      if (!durations.length) return
+      this.selectFirstAvailableDuration()
+    }
+  },
+
   methods: {
     goNextDate () {
       this.activeDate = this.nextDate
@@ -112,17 +122,14 @@ export default {
 
     hideLoader () {
       this.ui.sessionLoading = false
-    }
-  },
+    },
 
-  watch: {
-    activeDateDurations (durations: Array<Object>) {
-      if (!durations.length) return
+    selectFirstAvailableDuration () {
       const isActiveDurationInList = this.activeDateDurations.filter(d => d.duration === this.activeDuration).length
       // no need to change the duration if it's still in the list
       if (isActiveDurationInList) return
       // set first duration as selected by default if sth changed
-      this.activeDuration = durations[0].duration
+      this.activeDuration = this.activeDateDurations[0].duration
     }
   },
 

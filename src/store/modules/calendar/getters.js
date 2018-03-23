@@ -49,6 +49,7 @@ export default {
   },
 
   activeDateSessions (state, getters) {
+    console.info('activeDateSessions', state.activeDate.day)
     if (!state.activeDate.day) return []
     const dayRange = getRangeByDate(state.activeDate, 'day')
     return mingo.find(getters.sessions, {
@@ -61,11 +62,10 @@ export default {
   },
 
   activeDateDurations (state, getters, rootState, rootGetters) {
-    return mingo.aggregate(getters.activeDateSessions,
-      [
-        { $group: { _id: '$duration' }},
-        { $sort: { _id: 1 }}
-      ]).map(i => i._id)
+    return mingo.aggregate(getters.activeDateSessions, [
+      { $group: { _id: '$duration' }},
+      { $sort: { _id: 1 }}
+    ]).map(i => i._id)
   },
 
   activeSessions (state, getters, rootState, rootGetters) {
