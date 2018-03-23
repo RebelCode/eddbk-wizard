@@ -4,10 +4,6 @@
       {{ $_('You are booking a ') }} <strong>{{ selectedService.title }}</strong>
     </div>
     <div class="inline-form-control">
-      <label>{{ $_('Select a date') }}</label>
-      <calendar/>
-    </div>
-    <div class="inline-form-control">
       <label>{{ $_('Select duration') }}</label>
       <div>
         <select v-model="activeDuration" :disabled="isNoDurations" class="eddb-control">
@@ -44,15 +40,11 @@
 
 <script>
 // @flow
-import Calendar from './Calendar.vue'
 import moment from '@/utils/moment'
+import { mapStore } from '@/utils/vuex'
 import Vue from 'vue'
 
 export default {
-  components: {
-    Calendar
-  },
-
   data () {
     return {
       form: {
@@ -70,7 +62,20 @@ export default {
   },
 
   computed: {
-    selectedService () { return this.$sm.get('services.selected') },
+    ...mapStore('services', {
+      'selectedService': 'selected'
+    }),
+
+    ...mapStore('calendar', [
+      'activeDate',
+      'activeDuration',
+      'activeDateSessions',
+      'activeSessions',
+      'nextDate',
+      'prevDate',
+      'activeLoadedDays',
+      'selectedSession'
+    ]),
 
     activeDateDurations () {
       const durations = this.$sm.get('calendar.activeDateDurations')
@@ -82,51 +87,13 @@ export default {
       })
     },
 
-    activeDuration: {
-      get () {
-        return this.$sm.get('calendar.activeDuration')
-      },
-      set (duration: number) {
-        this.$sm.set('calendar.activeDuration', duration)
-      }
-    },
-
     isNoDurations () {
       return !this.activeDateDurations.length
     },
 
-    activeDateSessions () { return this.$sm.get('calendar.activeDateSessions') },
-
-    activeSessions () { return this.$sm.get('calendar.activeSessions') },
-
-    activeDate: {
-      get () {
-        return this.$sm.get('calendar.activeDate')
-      },
-
-      set (date: Object) {
-        this.$sm.set('calendar.activeDate', date)
-      }
-    },
-
-    nextDate () { return this.$sm.get('calendar.nextDate') },
-
-    prevDate () { return this.$sm.get('calendar.prevDate') },
-
-    activeLoadedDays () { return this.$sm.get('calendar.activeLoadedDays') },
-
     activeDayFormatted () {
       if (!this.activeDate.day) return this.$_('Please select a date')
       return moment(this.activeDate).format(this.$config.dateFormats.displayDay)
-    },
-
-    selectedSession: {
-      get () {
-        return this.$sm.get('calendar.selectedSession')
-      },
-      set (session: {}) {
-        this.$sm.set('calendar.selectedSession', session)
-      }
     }
   },
 
@@ -155,7 +122,7 @@ export default {
       // no need to change the duration if it's still in the list
       if (isActiveDurationInList) return
       // set first duration as selected by default if sth changed
-      this.$sm.set('calendar.activeDuration', durations[0].duration)
+      this.activeDuration = durations[0].duration
     }
   },
 

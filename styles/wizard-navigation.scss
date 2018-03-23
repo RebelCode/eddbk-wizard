@@ -6,7 +6,7 @@
 
     &:before, &:after {
       height: 100%;
-      width: 12.5%;
+      //width: (100% / 3 / 2);
       content: '';
       position: absolute;
       display: block;

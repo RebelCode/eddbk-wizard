@@ -11,14 +11,11 @@
       <tab-content :title="$_('Service')" :before-change="beforeServiceTabSwitch">
         <step-service v-model="selectedService" :list="servicesList" />
       </tab-content>
-      <tab-content :title="$_('Date &amp; time')" :before-change="beforeSessionTabSwitch">
-        <step-sessions v-if="selectedService" />
+      <tab-content :title="$_('Date')" :before-change="beforeDateTabSwitch">
+        <step-date v-if="selectedService" />
       </tab-content>
-      <tab-content :title="$_('Payment')">
-        Payment tab content
-      </tab-content>
-      <tab-content :title="$_('Confirmation')">
-        Confirmation tab content
+      <tab-content :title="$_('Available Time')" :before-change="beforeSessionTabSwitch">
+        <step-sessions v-if="activeDate.day" />
       </tab-content>
 
       <template slot="footer" scope="props">
@@ -29,7 +26,7 @@
           </div>
         </div>
 
-        <div class="wizard-footer-clear" v-if="selectedSession && props.activeTabIndex === 1">
+        <div class="wizard-footer-clear" v-if="selectedSession && props.activeTabIndex === 2">
           {{ sessionInfo }} {{ $_('Click Next to start the payment process.') }}
         </div>
 
@@ -55,57 +52,63 @@
 // @flow
 import _ from 'lodash'
 import { FormWizard, TabContent, WizardButton } from 'vue-form-wizard'
+
 import StepService from './StepService/StepService.vue'
+import StepDate from './StepDate/StepDate.vue'
 import StepSessions from './StepSessions/StepSessions.vue'
-import { mapState, mapGetters } from 'vuex'
+
+import { mapStore } from '@/utils/vuex'
+import { mapActions } from 'vuex'
 
 export default {
   components: {
     FormWizard,
     TabContent,
     WizardButton,
+
     StepService,
+    StepDate,
     StepSessions
   },
 
   created () {
-    this.$sm.dispatch('services/fetch')
+    this.fetchServices()
   },
 
   computed: {
-    ...mapGetters('services', [
-      'serviceInfo'
-    ]),
-    ...mapState('calendar', [
-      'selectedSession'
-    ]),
-    ...mapGetters('calendar', [
+    ...mapStore('services', {
+      'selectedService': 'selected',
+      'serviceInfo': 'serviceInfo',
+      'servicesList': 'list'
+    }),
+    ...mapStore('calendar', [
+      'selectedSession',
+      'activeDate',
       'sessionInfo'
-    ]),
-    servicesList () {
-      return this.$sm.get('services.list')
-    },
-    selectedService: {
-      get () {
-        return this.$sm.get('services.selected')
-      },
-      set (value: Object) {
-        this.$sm.set('services.selected', value)
-      }
-    },
-    selectedSession () { return this.$sm.get('calendar.selectedSession') }
+    ])
   },
 
   methods: {
+    ...mapActions('calendar', [
+      'loadSessionsByMonth',
+      'resetSessionsForNewService'
+    ]),
+    ...mapActions('services', {
+      'fetchServices': 'fetch'
+    }),
     beforeServiceTabSwitch () {
       if (this.selectedService) {
-        this.$sm.dispatch('calendar/loadSessionsByMonth', {}).then(result => {
+        this.loadSessionsByMonth({}).then(result => {
           const firstSession = _.first(result)
           const firstSessionTime = _.get(firstSession, 'start')
-          if (firstSessionTime) this.$sm.dispatch('calendar/resetSessionsForNewService', { firstSessionTime })
+          if (firstSessionTime) this.resetSessionsForNewService({ firstSessionTime })
         })
       }
       return !!this.selectedService
+    },
+
+    beforeDateTabSwitch () {
+      return !!this.activeDate
     },
 
     beforeSessionTabSwitch () {
