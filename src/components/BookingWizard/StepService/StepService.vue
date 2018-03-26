@@ -2,16 +2,10 @@
   <div>
     <div class="inline-form-control">
       <label>{{ $_('Select a service') }}</label>
-      <multiselect
-              v-model="selectedService"
-              :options="list"
-              track-by="title"
-              label="title"
-              :searchable="false"
-              :allow-empty="false"
-              :show-labels="false"
-      >
-      </multiselect>
+      <select v-model="selectedService" class="eddb-control">
+        <option :value="null" disabled selected>{{ $_('Select option') }}</option>
+        <option :value="item" v-for="item in list">{{ item.title }}</option>
+      </select>
     </div>
 
     <div class="service">
@@ -29,13 +23,7 @@
 <script>
 // @flow
 
-import Multiselect from 'vue-multiselect'
-
 export default {
-  components: {
-    Multiselect
-  },
-
   props: {
     list: Array,
     value: Object

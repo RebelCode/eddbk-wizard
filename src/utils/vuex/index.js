@@ -12,7 +12,7 @@ import _ from 'lodash'
  * this.fooInStore = 'bar'
  * ```
  *
- * For example you have store module in namespace `basket` with two items
+ * For example, you have store module in namespace `basket` with two items
  * in state: `selectedApple`, `list` and one getter `greenApplesList`.
  *
  * Using this helper map function you can simply write:
