@@ -15,11 +15,11 @@ Mingo.addOperators(Mingo.OP_EXPRESSION, (_) => {
     },
 
     /*
-    * Converts unix timestamp (in miliseconds) to Date object
+    * Converts unix timestamp (in milliseconds) to Date object
     */
     $timestampToDate (item, expr) {
-      const miliseconds = _.computeValue(item, expr)
-      return new Date(miliseconds)
+      const milliseconds = _.computeValue(item, expr)
+      return new Date(milliseconds)
     }
   }
 })
