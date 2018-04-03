@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div>
     <BookingWizard color="#17a7dd" step-size="sm"/>
   </div>
 </template>

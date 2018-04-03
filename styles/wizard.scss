@@ -1,8 +1,9 @@
 .edd-booking-wizard {
-  font-family: $font-family;
-  color: $black;
-  line-height: 1.4;
-  background-color: white;
+  //font-family: $font-family;
+  //color: $black;
+  //line-height: 1.4;
+  //background-color: white;
+  font-size: $font-size;
 
   @import 'wizard-header';
   @import 'wizard-navigation';

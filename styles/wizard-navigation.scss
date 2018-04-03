@@ -1,4 +1,8 @@
 .wizard-navigation {
+  .wizard-nav-pills>li>a {
+    box-shadow: none !important;
+  }
+
   .wizard-progress-with-circle {
     background-color: $light-gray;
     top: 28px;
