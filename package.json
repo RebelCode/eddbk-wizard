@@ -1,6 +1,6 @@
 {
-  "name": "edd-spa",
-  "version": "1.0.0",
+  "name": "bookings-client",
+  "version": "0.0.1",
   "description": "SPA for the EDD plugin",
   "author": "Refat <refat.ametov@gmail.com>",
   "private": true,
