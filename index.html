@@ -11,6 +11,8 @@
     <script>
       document.addEventListener('DOMContentLoaded', function () {
         // create new wizard using the configured service container (inside bottle)
+        var bottle = BookingWizardManager.getDefaultBottle()
+        bottle.container.config.API_BASE_URL = 'http://scotchbox.local/index.php?rest_route=/eddbk/v1/'
         bookingWizard = BookingWizardManager.create();
       });
     </script>

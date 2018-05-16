@@ -19,12 +19,13 @@ di.factory('api', function (container: { http: HttpHandlerInterface }) {
 
   const api: ApiInterface = {
     fetchServices () {
-      return http.get('/service')
+      return http.get('/services')
     },
 
     fetchSessions ({ serviceId, start, end }) {
-      return http.get(`/service/${serviceId}/sessions`, {
+      return http.get('/sessions', {
         params: {
+          serviceId,
           start,
           end
         }

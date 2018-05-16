@@ -9,6 +9,7 @@ import Vue from 'vue'
 * @return { object } - { start, end }
 */
 const getRangeByDate = (date: { year: number, month: number, day?: number }, range: string = 'month') => {
+  console.warn('getRangeByDate', JSON.stringify(date), range)
   const m = moment(date)
   const start = m.startOf(range).unix()
   const end = m.endOf(range).unix()
@@ -19,7 +20,7 @@ const getRangeByDate = (date: { year: number, month: number, day?: number }, ran
 }
 
 const timestampToDate = (timestamp) => {
-  const m = moment.unix(timestamp)
+  const m = moment(timestamp)
   return {
     year: m.year(),
     month: m.month(),
@@ -33,6 +34,7 @@ export default {
   },
 
   sessionInfo (state, getters) {
+    if (!state.selectedSession) return
     const start = moment.unix(state.selectedSession.start)
     const duration = state.selectedSession.end - state.selectedSession.start
 
@@ -49,19 +51,28 @@ export default {
   },
 
   activeDateSessions (state, getters) {
-    console.info('activeDateSessions', state.activeDate.day)
     if (!state.activeDate.day) return []
     const dayRange = getRangeByDate(state.activeDate, 'day')
-    return mingo.find(getters.sessions, {
+    const all = mingo.find(getters.sessions, {
       serviceId: getters.serviceId,
       start: {
         $gte: dayRange.start,
         $lte: dayRange.end
       }
     }).all()
+    console.info('getters.sessions, state.activeDate.day', getters.sessions, state.activeDate.day, {
+      serviceId: getters.serviceId,
+      start: {
+        $gte: dayRange.start,
+        $lte: dayRange.end
+      }
+    })
+    console.info('all active date sessions:', all)
+    return all
   },
 
   activeDateDurations (state, getters, rootState, rootGetters) {
+    console.info('active date sessions', getters.activeDateSessions)
     return mingo.aggregate(getters.activeDateSessions, [
       { $group: { _id: '$duration' }},
       { $sort: { _id: 1 }}
@@ -114,6 +125,7 @@ export default {
   visibleMonthSessions (state, getters) {
     if (state.visibleMonth.month === null) return []
     const monthRange = getRangeByDate(state.visibleMonth, 'month')
+    console.warn('monthRange', state.visibleMonth, monthRange)
     return mingo.find(getters.sessions, {
       serviceId: getters.serviceId,
       start: {
@@ -124,6 +136,7 @@ export default {
   },
 
   visibleMonthDays (state, getters) {
+    console.info('getters.visibleMonthSessions', getters.visibleMonthSessions)
     return mingo.aggregate(getters.visibleMonthSessions,
       [
         {

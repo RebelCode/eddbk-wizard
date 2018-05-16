@@ -1,7 +1,7 @@
 <template>
   <div :class="{ 'session-loading': ui.sessionLoading }">
     <div class="edd-booking-wizard__info">
-      {{ $_('You are booking a ') }} <strong>{{ selectedService.title }}</strong>
+      {{ $_('You are booking a ') }} <strong>{{ selectedService.name }}</strong>
     </div>
     <div class="inline-form-control">
       <label>{{ $_('Select a date') }}</label>

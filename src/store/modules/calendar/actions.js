@@ -21,8 +21,8 @@ export default {
       mRange = moment.range(start, end)
     }
 
-    const start = mRange.start.unix()
-    const end = mRange.end.unix()
+    const start = mRange.start.format()
+    const end = mRange.end.format()
 
     console.info('store/calendar/actions.js, fetching sessions from',
       mRange.start.format(),

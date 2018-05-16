@@ -4,7 +4,7 @@
       <label>{{ $_('Select a service') }}</label>
       <select v-model="selectedService" class="eddb-control">
         <option :value="null" disabled selected>{{ $_('Select option') }}</option>
-        <option :value="item" v-for="item in list">{{ item.title }}</option>
+        <option :value="item" v-for="item in list">{{ item.name }}</option>
       </select>
     </div>
 

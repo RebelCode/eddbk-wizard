@@ -14,15 +14,21 @@ const getters = {
   },
 
   minServiceSession (state) {
+    if (!state.selected) return
     const sessionLengths = state.selected.sessionLengths
     const prices = _.map(sessionLengths, s => s.price.amount).map(Number)
     const minPrice = _.min(prices)
-    return _.find(sessionLengths, s => s.price.amount === minPrice)
+    return _.find(sessionLengths, s => Number(s.price.amount) === minPrice)
   },
 
   serviceInfo (state, getters) {
+    if (!state.selected) {
+      return {}
+    }
+    console.info()
+
     const minSessionPrice = getters.minServiceSession.price.formatted
-    const minSessionLength = getters.minServiceSession.length
+    const minSessionLength = getters.minServiceSession.sessionLength
     const minSessionLengthHumanized = moment.duration(minSessionLength, 'seconds').humanize()
 
     return {
@@ -38,7 +44,7 @@ const getters = {
 const actions = {
   fetch ({ commit }) {
     Vue.$api.fetchServices().then(response => {
-      const services = _.map(response.data)
+      const services = _.map(response.data.items)
       commit('set', { key: 'list', value: services })
     })
   }

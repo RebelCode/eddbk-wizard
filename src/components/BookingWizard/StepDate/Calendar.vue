@@ -48,6 +48,7 @@ export default {
 
     // inversion for visibleMonthDays, converted to Date objects
     visibleMonthDisabledDates () {
+      console.info('this.visibleMonthDays', this.visibleMonthDays)
       if (!this.visibleMonthDays) return []
       const daysInMonth = moment([this.visibleMonth.year, this.visibleMonth.month]).daysInMonth()
       const monthRange = _.range(1, daysInMonth + 1)
@@ -81,6 +82,7 @@ export default {
     },
 
     updateVisibleMonth (newMonth: Object) {
+      console.warn('updateVisibleMonth', newMonth)
       this.loadSessionsByMonth({ month: newMonth })
       // this.setVisibleMonth(newMonth)
       this.visibleMonth = newMonth

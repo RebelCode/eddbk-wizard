@@ -12,12 +12,14 @@ export default {
   */
   load ({ commit }, { serviceId, start, end }) {
     const uncachedRange = rangeCache.uncached({ serviceId, start, end })
+    console.info('uncachedRange, { serviceId, start, end }', uncachedRange, { serviceId, start, end })
     if (!uncachedRange) {
       return Promise.resolve(null) // nothing loaded — everything is in cahce
     }
     return Vue.$api.fetchSessions(uncachedRange).then(response => {
+      console.info('after Vue.$api.fetchSessions', response)
       rangeCache.remember(uncachedRange)
-      const sessionsPrepared = _.map(response.data, prepareSessionObject)
+      const sessionsPrepared = _.map(response.data.items, prepareSessionObject)
       commit('insertArray', { collection: sessionsPrepared })
       return sessionsPrepared
     })
