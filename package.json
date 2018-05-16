@@ -1,6 +1,6 @@
 {
   "name": "@rebelcode/bookings-client",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "SPA for the EDD plugin",
   "author": "Refat <refat.ametov@gmail.com>",
   "scripts": {
