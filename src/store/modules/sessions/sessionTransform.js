@@ -2,14 +2,14 @@
 import moment from '@/utils/moment'
 
 export const getSessionUniqueKey = (session: Object) => {
-  return session.serviceId + '_' + session.start + '_' + session.end
+  return session.id + '_' + session.start + '_' + session.end
 }
 
 const sessionCache = {}
-const getSessionData = (session: Object) => {
+const getSessionData = (session: Object, service: Object) => {
   const cacheKey = session.serviceId + '.' + session.duration
   if (!sessionCache[cacheKey]) {
-    for (const sessionLength of session.service.sessionLengths) {
+    for (const sessionLength of service.sessionLengths) {
       if (sessionLength.sessionLength === session.duration) {
         sessionCache[cacheKey] = sessionLength
         break
@@ -21,14 +21,14 @@ const getSessionData = (session: Object) => {
   }
 }
 
-export const prepareSessionObject = (session: Object) => {
+export const prepareSessionObject = (session: Object, service: Object) => {
   const uId = getSessionUniqueKey(session)
   session['_id'] = uId
-  session['serviceId'] = session.service.id
+  session['serviceId'] = service.id
   session['start'] = moment(session.start).unix()
   session['end'] = moment(session.end).unix()
   session['duration'] = session.end - session.start
-  session['data'] = getSessionData(session)
+  session['data'] = getSessionData(session, service)
   return session
 }
 

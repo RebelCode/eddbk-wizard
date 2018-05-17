@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import _ from 'lodash'
 import { prepareSessionObject } from './sessionTransform.js'
 import RangeCache from './rangeCache.js'
 
@@ -10,7 +9,8 @@ export default {
   * Loads sessions from API
   * Caches queries
   */
-  load ({ commit }, { serviceId, start, end }) {
+  load ({ commit, state, rootState }, { serviceId, start, end }) {
+    console.info('load satatetetetet', rootState)
     const uncachedRange = rangeCache.uncached({ serviceId, start, end })
     console.info('uncachedRange, { serviceId, start, end }', uncachedRange, { serviceId, start, end })
     if (!uncachedRange) {
@@ -19,7 +19,9 @@ export default {
     return Vue.$api.fetchSessions(uncachedRange).then(response => {
       console.info('after Vue.$api.fetchSessions', response)
       rangeCache.remember(uncachedRange)
-      const sessionsPrepared = _.map(response.data.items, prepareSessionObject)
+      const sessionsPrepared = response.data.items.map(item => {
+        return prepareSessionObject(item, rootState.services.selected)
+      })
       commit('insertArray', { collection: sessionsPrepared })
       return sessionsPrepared
     })
