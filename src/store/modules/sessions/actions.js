@@ -10,7 +10,6 @@ export default {
   * Caches queries
   */
   load ({ commit, state, rootState }, { serviceId, start, end }) {
-    console.info('load satatetetetet', rootState)
     const uncachedRange = rangeCache.uncached({ serviceId, start, end })
     console.info('uncachedRange, { serviceId, start, end }', uncachedRange, { serviceId, start, end })
     if (!uncachedRange) {
