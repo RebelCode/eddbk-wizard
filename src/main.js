@@ -1,3 +1,8 @@
+/*
+ * @todo: spend a time and move it away from this place
+ */
+require('./../styles/app.scss')
+
 import bottle from '@/services/'
 import App from './app.js'
 

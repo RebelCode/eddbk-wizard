@@ -17,6 +17,8 @@
 import Datepicker from 'vuejs-datepicker'
 import _ from 'lodash'
 import moment from '@/utils/moment'
+import { mapStore } from '@/utils/vuex'
+import { mapActions } from 'vuex'
 
 export default {
   components: {
@@ -24,11 +26,11 @@ export default {
   },
 
   computed: {
-    activeDate () { return this.$sm.get('calendar.activeDate') },
-
-    visibleMonth () { return this.$sm.get('calendar.visibleMonth') },
-
-    visibleMonthDays () { return this.$sm.get('calendar.visibleMonthDays') },
+    ...mapStore('calendar', [
+      'activeDate',
+      'visibleMonth',
+      'visibleMonthDays'
+    ]),
 
     selectedDate: {
       get () {
@@ -36,17 +38,17 @@ export default {
         return new Date(this.activeDate.year, this.activeDate.month, this.activeDate.day)
       },
       set (date: any) {
-        const activeDate = {
+        this.activeDate = {
           year: date.getFullYear(),
           month: date.getMonth(),
           day: date.getDate()
         }
-        this.$sm.set('calendar.activeDate', activeDate)
       }
     },
 
     // inversion for visibleMonthDays, converted to Date objects
     visibleMonthDisabledDates () {
+      console.info('this.visibleMonthDays', this.visibleMonthDays)
       if (!this.visibleMonthDays) return []
       const daysInMonth = moment([this.visibleMonth.year, this.visibleMonth.month]).daysInMonth()
       const monthRange = _.range(1, daysInMonth + 1)
@@ -63,21 +65,27 @@ export default {
   },
 
   methods: {
+    ...mapActions('calendar', [
+      'loadSessionsByMonth'
+      // 'setVisibleMonth'
+    ]),
+
     dateFormatter (date: string) {
       return moment(date).format(this.$config.dateFormats.date)
     },
 
     monthChanged (value: Date) {
-      const newMonth = {
+      this.updateVisibleMonth({
         year: value.getFullYear(),
         month: value.getMonth()
-      }
-      this.updateVisibleMonth(newMonth)
+      })
     },
 
     updateVisibleMonth (newMonth: Object) {
-      this.$sm.dispatch('calendar/loadSessionsByMonth', { month: newMonth })
-      this.$sm.set('calendar.visibleMonth', newMonth)
+      console.warn('updateVisibleMonth', newMonth)
+      this.loadSessionsByMonth({ month: newMonth })
+      // this.setVisibleMonth(newMonth)
+      this.visibleMonth = newMonth
     }
   },
 

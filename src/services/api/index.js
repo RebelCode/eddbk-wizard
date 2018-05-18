@@ -23,8 +23,9 @@ di.factory('api', function (container: { http: HttpHandlerInterface }) {
     },
 
     fetchSessions ({ serviceId, start, end }) {
-      return http.get(`/service/${serviceId}/sessions`, {
+      return http.get('/sessions', {
         params: {
+          serviceId,
           start,
           end
         }

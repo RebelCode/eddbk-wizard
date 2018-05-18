@@ -2,13 +2,13 @@ import moment from '@/utils/moment'
 import _ from 'lodash'
 
 const getFullMonthsRanges = ({ serviceId, start, end }) => {
-  const range = moment.range(moment.unix(start).startOf('month'), moment.unix(end).endOf('month'))
+  const range = moment.range(moment(start).startOf('month'), moment(end).endOf('month'))
   const months = Array.from(range.by('month')) // create an array from months iterator
   return months.map(m => {
     return {
       serviceId,
-      start: m.startOf('month').unix(),
-      end: m.endOf('month').unix()
+      start: m.startOf('month').format(),
+      end: m.endOf('month').format()
     }
   })
 }

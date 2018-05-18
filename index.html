@@ -4,25 +4,32 @@
     <meta charset="utf-8">
     <title>edd-spa</title>
   </head>
-  <body>
+  <body class="entry-content">
     <div id="app2"></div>
     <div id="app"></div>
     <!-- built files will be auto injected -->
     <script>
       document.addEventListener('DOMContentLoaded', function () {
-        // get default configuration inside the Bottle instance
-        var bottle = BookingWizardManager.getDefaultBottle()
-
-        bottle.container.config.API_BASE_URL = "http://192.168.33.10:8000";
-        // override some service with costom realization
-        // bottle.service('translate', function () {
-        //   return function (format, params, context) {
-        //     return format
-        //   }
-        // });
         // create new wizard using the configured service container (inside bottle)
-        bookingWizard = BookingWizardManager.create(bottle);
+        var bottle = BookingWizardManager.getDefaultBottle()
+        bottle.container.config.API_BASE_URL = 'http://scotchbox.local/index.php?rest_route=/eddbk/v1/'
+        bookingWizard = BookingWizardManager.create();
       });
     </script>
+
+    <style>
+      html {
+        /*background-color: rgba(43, 36, 62, 0.3);*/
+      }
+      .edd-booking-wizard {
+        max-width: 38rem;
+        margin: 4rem auto;
+        /*overflow: hidden;*/
+        /*border-radius: 6px !important;*/
+        /*box-shadow: 0 5px 50px rgba(0, 0, 0, 0.3);*/
+      }
+    </style>
+    <link rel='stylesheet' id='twentyseventeen-fonts-css'  href='https://fonts.googleapis.com/css?family=Libre+Franklin%3A300%2C300i%2C400%2C400i%2C600%2C600i%2C800%2C800i&#038;subset=latin%2Clatin-ext' type='text/css' media='all' />
+    <link rel='stylesheet' id='twentyseventeen-style-css'  href='http://scotchbox.local/wp/wp-content/themes/twentyseventeen/style.css?ver=4.9.2' type='text/css' media='all' />
   </body>
 </html>

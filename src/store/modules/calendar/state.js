@@ -1,3 +1,5 @@
+const today = new Date()
+
 export default {
   sessions: [],
   selectedSession: null,
@@ -7,8 +9,8 @@ export default {
     day: null
   },
   visibleMonth: {
-    year: null,
-    month: null
+    year: today.getFullYear(),
+    month: today.getMonth()
   },
   activeDuration: null
 }

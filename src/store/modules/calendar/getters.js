@@ -1,5 +1,6 @@
 import moment from '@/utils/moment'
 import mingo from '@/utils/mingo'
+import Vue from 'vue'
 
 /*
 * Transforms given date object to timestamp ranges
@@ -8,6 +9,7 @@ import mingo from '@/utils/mingo'
 * @return { object } - { start, end }
 */
 const getRangeByDate = (date: { year: number, month: number, day?: number }, range: string = 'month') => {
+  console.warn('getRangeByDate', JSON.stringify(date), range)
   const m = moment(date)
   const start = m.startOf(range).unix()
   const end = m.endOf(range).unix()
@@ -18,7 +20,7 @@ const getRangeByDate = (date: { year: number, month: number, day?: number }, ran
 }
 
 const timestampToDate = (timestamp) => {
-  const m = moment.unix(timestamp)
+  const m = moment(timestamp)
   return {
     year: m.year(),
     month: m.month(),
@@ -31,6 +33,19 @@ export default {
     return rootGetters['sessions/all'] // reference for the single source of truth for the sessions
   },
 
+  sessionInfo (state, getters) {
+    if (!state.selectedSession) return
+    const start = moment.unix(state.selectedSession.start)
+    const duration = state.selectedSession.end - state.selectedSession.start
+
+    return Vue.$_('You have selected %(duration)s appointment, starting at %(time)s on %(date)s. The price is of %(price)s.', {
+      duration: moment.duration(duration, 'seconds').humanize(),
+      time: start.format(Vue.$config.dateFormats.time),
+      date: start.format(Vue.$config.dateFormats.fullDate),
+      price: state.selectedSession.data.price.formatted
+    })
+  },
+
   serviceId (state, getters, rootState, rootGetters) {
     return rootGetters['services/selectedId']
   },
@@ -38,21 +53,30 @@ export default {
   activeDateSessions (state, getters) {
     if (!state.activeDate.day) return []
     const dayRange = getRangeByDate(state.activeDate, 'day')
-    return mingo.find(getters.sessions, {
+    const all = mingo.find(getters.sessions, {
       serviceId: getters.serviceId,
       start: {
         $gte: dayRange.start,
         $lte: dayRange.end
       }
     }).all()
+    console.info('getters.sessions, state.activeDate.day', getters.sessions, state.activeDate.day, {
+      serviceId: getters.serviceId,
+      start: {
+        $gte: dayRange.start,
+        $lte: dayRange.end
+      }
+    })
+    console.info('all active date sessions:', all)
+    return all
   },
 
   activeDateDurations (state, getters, rootState, rootGetters) {
-    return mingo.aggregate(getters.activeDateSessions,
-      [
-        { $group: { _id: '$duration' }},
-        { $sort: { _id: 1 }}
-      ]).map(i => i._id)
+    console.info('active date sessions', getters.activeDateSessions)
+    return mingo.aggregate(getters.activeDateSessions, [
+      { $group: { _id: '$duration' }},
+      { $sort: { _id: 1 }}
+    ]).map(i => i._id)
   },
 
   activeSessions (state, getters, rootState, rootGetters) {
@@ -101,6 +125,7 @@ export default {
   visibleMonthSessions (state, getters) {
     if (state.visibleMonth.month === null) return []
     const monthRange = getRangeByDate(state.visibleMonth, 'month')
+    console.warn('monthRange', state.visibleMonth, monthRange)
     return mingo.find(getters.sessions, {
       serviceId: getters.serviceId,
       start: {
@@ -111,6 +136,7 @@ export default {
   },
 
   visibleMonthDays (state, getters) {
+    console.info('getters.visibleMonthSessions', getters.visibleMonthSessions)
     return mingo.aggregate(getters.visibleMonthSessions,
       [
         {

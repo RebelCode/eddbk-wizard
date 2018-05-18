@@ -3,7 +3,7 @@ import moment from '@/utils/moment'
 
 const defaultSessionsRange = () => {
   const start = moment() // now
-  const end = moment().add(1, 'month').endOf('month') // end of the next month
+  const end = moment().endOf('month') // end of THIS month
   return moment.range(start, end)
 }
 
@@ -17,13 +17,19 @@ export default {
       mRange = defaultSessionsRange()
     } else {
       const start = moment(month).startOf('month')
-      const nextMonth = moment(month).add(1, 'month')
-      const end = nextMonth.endOf('month')
+      const end = moment(month).endOf('month')
       mRange = moment.range(start, end)
     }
 
-    const start = mRange.start.unix()
-    const end = mRange.end.unix()
+    const start = mRange.start.format()
+    const end = mRange.end.format()
+
+    console.info('store/calendar/actions.js, fetching sessions from',
+      mRange.start.format(),
+      'to', mRange.end.format(),
+      'for service', serviceId
+    )
+
     Vue.$eventBus.$emit('fetchingSessions:start', { serviceId, month })
     return dispatch('sessions/load', { serviceId, start, end }, { root: true }).then(
       result => {
