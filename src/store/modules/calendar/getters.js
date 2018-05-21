@@ -20,7 +20,7 @@ const getRangeByDate = (date: { year: number, month: number, day?: number }, ran
 }
 
 const timestampToDate = (timestamp) => {
-  const m = moment(timestamp)
+  const m = moment.unix(timestamp)
   return {
     year: m.year(),
     month: m.month(),
