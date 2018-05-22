@@ -13,7 +13,7 @@ di.factory('http', function (container: { config: { API_BASE_URL: string } }) {
   }
 })
 
-di.factory('api', function (container: { http: HttpHandlerInterface }) {
+di.factory('api', function (container: { http: HttpHandlerInterface, config: { bookingStatusTransitions: Object } }) {
   const http = container.http
 
   const api: ApiInterface = {
@@ -37,7 +37,7 @@ di.factory('api', function (container: { http: HttpHandlerInterface }) {
         end,
         service,
         resource: service,
-        transition: 'cart'
+        transition: container.config.bookingStatusTransitions.cart
       })
     }
   }

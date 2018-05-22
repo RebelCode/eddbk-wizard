@@ -6,6 +6,7 @@
                  :nextButtonText="$_('Next')"
                  :backButtonText="$_('Back')"
                  :finishButtonText="$_('Finish')"
+                 v-if="!isThankYouVisible"
 
     >
       <tab-content :title="$_('Service')" :before-change="beforeServiceTabSwitch">
@@ -43,10 +44,12 @@
           <wizard-button @click.native="props.isLastStep ? createBooking() : props.nextTab()"
                          :class="['wizard-footer-right', props.isLastStep ? 'finish-button' : '']"
                          :style="props.fillButtonStyle"
+                         :disabled="isBookingCreating ? 'disabled' : false"
           >{{props.isLastStep ? $_('Add to cart') : $_('Next')}}</wizard-button>
         </div>
       </template>
     </form-wizard>
+    <thank-you-page @book-new-session="hideThankYouPage" v-else />
   </div>
 </template>
 
@@ -58,15 +61,30 @@ import { FormWizard, TabContent, WizardButton } from 'vue-form-wizard'
 import StepService from './StepService/StepService.vue'
 import StepDate from './StepDate/StepDate.vue'
 import StepSessions from './StepSessions/StepSessions.vue'
+import ThankYouPage from './ThankYouPage/ThankYouPage.vue'
 
 import { mapStore } from '@/utils/vuex'
 import { mapActions } from 'vuex'
 
 export default {
+  data () {
+    return {
+      /**
+       * @property {boolean} UI indicator that telling that booking is creating.
+       */
+      isBookingCreating: false,
+
+      /**
+       * @property {boolean} UI indicator that telling that thank you page is visible.
+       */
+      isThankYouVisible: false
+    }
+  },
   components: {
     FormWizard,
     TabContent,
     WizardButton,
+    ThankYouPage,
 
     StepService,
     StepDate,
@@ -101,8 +119,27 @@ export default {
     ...mapActions('sessions', [
       'bookSession'
     ]),
+    /**
+     * Create booking using selected session.
+     */
     createBooking () {
-      this.bookSession({ bookingSession: this.selectedSession })
+      this.isBookingCreating = true
+      this.bookSession({ bookingSession: this.selectedSession }).then(() => {
+        this.isBookingCreating = false
+        this.showThankYouPage()
+      })
+    },
+    /**
+     * Show thank you page, after successful creation of booking
+     */
+    showThankYouPage () {
+      this.isThankYouVisible = true
+    },
+    /**
+     * Hide thank you page
+     */
+    hideThankYouPage () {
+      this.isThankYouVisible = false
     },
     beforeServiceTabSwitch () {
       if (this.selectedService) {
