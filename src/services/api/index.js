@@ -31,6 +31,15 @@ di.factory('api', function (container: { http: HttpHandlerInterface, config: { b
       })
     },
 
+    /**
+     * Send creation booking request.
+     *
+     * @param {string} start Booking start date, in ISO8601.
+     * @param {string} end Booking end date, in ISO8601.
+     * @param {number} service Booking service id.
+     *
+     * @return {Promise<any>} Booking creation request.
+     */
     createBooking ({ start, end, service }) {
       return http.post('/bookings', {
         start,

@@ -29,10 +29,12 @@ export default {
   /**
    * Create booking based on selected session.
    *
-   * @param commit
-   * @param state
-   * @param rootState
-   * @param bookingSession
+   * @param {function} commit Vuex commit function.
+   * @param {object} state Vuex module store.
+   * @param {object} rootState Vuex root store.
+   * @param {object} bookingSession Session that should be booked.
+   *
+   * @return {Promise<any>} Booking creation request promise.
    */
   bookSession ({ commit, state, rootState }, { bookingSession }) {
     return Vue.$api.createBooking({
