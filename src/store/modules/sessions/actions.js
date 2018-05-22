@@ -5,10 +5,10 @@ import RangeCache from './rangeCache.js'
 const rangeCache = new RangeCache()
 
 export default {
-  /*
-  * Loads sessions from API
-  * Caches queries
-  */
+  /**
+   * Loads sessions from API
+   * Caches queries
+   */
   load ({ commit, state, rootState }, { serviceId, start, end }) {
     const uncachedRange = rangeCache.uncached({ serviceId, start, end })
     console.info('uncachedRange, { serviceId, start, end }', uncachedRange, { serviceId, start, end })
@@ -23,6 +23,22 @@ export default {
       })
       commit('insertArray', { collection: sessionsPrepared })
       return sessionsPrepared
+    })
+  },
+
+  /**
+   * Create booking based on selected session.
+   *
+   * @param commit
+   * @param state
+   * @param rootState
+   * @param bookingSession
+   */
+  bookSession ({ commit, state, rootState }, { bookingSession }) {
+    return Vue.$api.createBooking({
+      start: bookingSession._start,
+      end: bookingSession._end,
+      service: bookingSession.serviceId
     })
   }
 }

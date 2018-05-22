@@ -1,5 +1,4 @@
 // @flow
-
 import di from '@/services/di'
 import { HttpHandlerInterface } from './interfaces/HttpHandlerInterface.js'
 import { ApiInterface } from './interfaces/ApiInterface.js'
@@ -29,6 +28,16 @@ di.factory('api', function (container: { http: HttpHandlerInterface }) {
           start,
           end
         }
+      })
+    },
+
+    createBooking ({ start, end, service }) {
+      return http.post('/bookings', {
+        start,
+        end,
+        service,
+        resource: service,
+        transition: 'cart'
       })
     }
   }

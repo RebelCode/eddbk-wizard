@@ -40,7 +40,7 @@
             {{ $_('Back') }}
           </wizard-button>
 
-          <wizard-button @click.native="props.isLastStep ? alert('Done') : props.nextTab()"
+          <wizard-button @click.native="props.isLastStep ? createBooking() : props.nextTab()"
                          :class="['wizard-footer-right', props.isLastStep ? 'finish-button' : '']"
                          :style="props.fillButtonStyle"
           >{{props.isLastStep ? $_('Add to cart') : $_('Next')}}</wizard-button>
@@ -98,6 +98,12 @@ export default {
     ...mapActions('services', {
       'fetchServices': 'fetch'
     }),
+    ...mapActions('sessions', [
+      'bookSession'
+    ]),
+    createBooking () {
+      this.bookSession({ bookingSession: this.selectedSession })
+    },
     beforeServiceTabSwitch () {
       if (this.selectedService) {
         this.loadSessionsByMonth({}).then(result => {
