@@ -38,8 +38,8 @@ export default {
    */
   bookSession ({ commit, state, rootState }, { bookingSession }) {
     return Vue.$api.createBooking({
-      start: bookingSession._start,
-      end: bookingSession._end,
+      start: bookingSession.startFormatted,
+      end: bookingSession.endFormatted,
       service: bookingSession.serviceId
     })
   }
