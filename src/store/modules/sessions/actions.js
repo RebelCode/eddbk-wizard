@@ -1,14 +1,15 @@
 import Vue from 'vue'
 import { prepareSessionObject } from './sessionTransform.js'
 import RangeCache from './rangeCache.js'
+import moment from '@/utils/moment'
 
 const rangeCache = new RangeCache()
 
 export default {
-  /*
-  * Loads sessions from API
-  * Caches queries
-  */
+  /**
+   * Loads sessions from API
+   * Caches queries
+   */
   load ({ commit, state, rootState }, { serviceId, start, end }) {
     const uncachedRange = rangeCache.uncached({ serviceId, start, end })
     console.info('uncachedRange, { serviceId, start, end }', uncachedRange, { serviceId, start, end })
@@ -23,6 +24,24 @@ export default {
       })
       commit('insertArray', { collection: sessionsPrepared })
       return sessionsPrepared
+    })
+  },
+
+  /**
+   * Create booking based on selected session.
+   *
+   * @param {function} commit Vuex commit function.
+   * @param {object} state Vuex module store.
+   * @param {object} rootState Vuex root store.
+   * @param {object} bookingSession Session that should be booked.
+   *
+   * @return {Promise<any>} Booking creation request promise.
+   */
+  bookSession ({ commit, state, rootState }, { bookingSession }) {
+    return Vue.$api.createBooking({
+      start: moment.unix(bookingSession.start).format(),
+      end: moment.unix(bookingSession.end).format(),
+      service: bookingSession.serviceId
     })
   }
 }

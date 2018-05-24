@@ -10,10 +10,15 @@ const dateFormats = {
   fullDate: 'dddd Do MMMM YYYY'
 }
 
+const bookingStatusTransitions = {
+  cart: 'cart'
+}
+
 di.service('config', function () {
   return {
     appEl: '#app',
     'API_BASE_URL': 'http://127.0.0.1:8000',
-    dateFormats
+    dateFormats,
+    bookingStatusTransitions
   }
 })

@@ -1,5 +1,4 @@
 // @flow
-
 import di from '@/services/di'
 import { HttpHandlerInterface } from './interfaces/HttpHandlerInterface.js'
 import { ApiInterface } from './interfaces/ApiInterface.js'
@@ -14,7 +13,7 @@ di.factory('http', function (container: { config: { API_BASE_URL: string } }) {
   }
 })
 
-di.factory('api', function (container: { http: HttpHandlerInterface }) {
+di.factory('api', function (container: { http: HttpHandlerInterface, config: { bookingStatusTransitions: Object } }) {
   const http = container.http
 
   const api: ApiInterface = {
@@ -29,6 +28,25 @@ di.factory('api', function (container: { http: HttpHandlerInterface }) {
           start,
           end
         }
+      })
+    },
+
+    /**
+     * Send creation booking request.
+     *
+     * @param {string} start Booking start date, in ISO8601.
+     * @param {string} end Booking end date, in ISO8601.
+     * @param {number} service Booking service id.
+     *
+     * @return {Promise<any>} Booking creation request.
+     */
+    createBooking ({ start, end, service }) {
+      return http.post('/bookings', {
+        start,
+        end,
+        service,
+        resource: service,
+        transition: container.config.bookingStatusTransitions.cart
       })
     }
   }
