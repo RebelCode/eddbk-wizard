@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import { prepareSessionObject } from './sessionTransform.js'
 import RangeCache from './rangeCache.js'
+import moment from '@/utils/moment'
 
 const rangeCache = new RangeCache()
 
@@ -38,8 +39,8 @@ export default {
    */
   bookSession ({ commit, state, rootState }, { bookingSession }) {
     return Vue.$api.createBooking({
-      start: bookingSession.startFormatted,
-      end: bookingSession.endFormatted,
+      start: moment.unix(bookingSession.start).format(),
+      end: moment.unix(bookingSession.end).format(),
       service: bookingSession.serviceId
     })
   }

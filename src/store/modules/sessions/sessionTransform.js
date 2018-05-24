@@ -25,8 +25,6 @@ export const prepareSessionObject = (session: Object, service: Object) => {
   const uId = getSessionUniqueKey(session)
   session['_id'] = uId
   session['serviceId'] = service.id
-  session['startFormatted'] = session.start
-  session['endFormatted'] = session.end
   session['start'] = moment(session.start).unix()
   session['end'] = moment(session.end).unix()
   session['duration'] = session.end - session.start
