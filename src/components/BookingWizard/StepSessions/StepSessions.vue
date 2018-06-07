@@ -41,6 +41,7 @@
 <script>
 // @flow
 import moment from '@/utils/moment'
+import humanizeDuration from 'humanize-duration'
 import { mapStore } from '@/utils/vuex'
 import Vue from 'vue'
 
@@ -83,7 +84,10 @@ export default {
       const durations = this.$sm.get('calendar.activeDateDurations')
       return durations.map(Number).map(d => {
         return {
-          title: moment.duration(d, 'seconds').humanize(),
+          title: humanizeDuration(d * 1000, {
+            units: ['w', 'd', 'h', 'm'],
+            round: true
+          }),
           duration: d
         }
       })

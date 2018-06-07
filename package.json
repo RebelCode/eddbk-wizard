@@ -18,6 +18,7 @@
     "axios": "^0.16.2",
     "axios-mock-adapter": "^1.9.0",
     "bottlejs": "^1.6.1",
+    "humanize-duration": "^3.14.0",
     "lodash": "^4.17.4",
     "mingo": "^2.0.3",
     "moment": "^2.18.1",
