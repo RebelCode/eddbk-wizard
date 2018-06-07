@@ -105,7 +105,15 @@ export default {
       'selectedSession',
       'activeDate',
       'sessionInfo'
-    ])
+    ]),
+    /**
+     * @since [*next-version*]
+     *
+     * @param {string} redirectUrl URL for redirection after booking is created.
+     */
+    redirectUrl () {
+      return this.$config.redirectUrl
+    }
   },
 
   methods: {
@@ -126,8 +134,30 @@ export default {
       this.isBookingCreating = true
       this.bookSession({ bookingSession: this.selectedSession }).then(() => {
         this.isBookingCreating = false
-        this.showThankYouPage()
+        this.handleBookSuccess()
       })
+    },
+    /**
+     * Handler for case when booking was successfully created.
+     *
+     * @since [*next-version*]
+     */
+    handleBookSuccess () {
+      if (this.redirectUrl) {
+        this.redirectTo(this.redirectUrl)
+        return
+      }
+      this.showThankYouPage()
+    },
+    /**
+     * Redirect browser to given URL.
+     *
+     * @since [*next-version*]
+     *
+     * @param {string} redirectUrl URL on which browser should be redirected.
+     */
+    redirectTo (redirectUrl) {
+      window.location.replace(redirectUrl)
     },
     /**
      * Show thank you page, after successful creation of booking

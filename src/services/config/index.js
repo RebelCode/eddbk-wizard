@@ -18,6 +18,7 @@ di.service('config', function () {
   return {
     appEl: '#app',
     'API_BASE_URL': 'http://127.0.0.1:8000',
+    redirectUrl: null,
     dateFormats,
     bookingStatusTransitions
   }
