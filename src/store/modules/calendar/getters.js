@@ -82,7 +82,10 @@ export default {
   activeSessions (state, getters, rootState, rootGetters) {
     if (!state.activeDuration) return []
     return mingo.find(getters.activeDateSessions, {
-      duration: state.activeDuration
+      duration: state.activeDuration,
+      start: {
+        $gt: moment().unix()
+      }
     }).all()
   },
 
