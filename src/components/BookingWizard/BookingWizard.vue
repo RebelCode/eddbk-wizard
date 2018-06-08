@@ -7,10 +7,14 @@
                  :backButtonText="$_('Back')"
                  :finishButtonText="$_('Finish')"
                  v-if="!isThankYouVisible"
+                 ref="bookingWizard"
 
     >
       <tab-content :title="$_('Service')" :before-change="beforeServiceTabSwitch">
-        <step-service v-model="selectedService" :list="servicesList" />
+        <step-service v-model="selectedService" :list="servicesList" v-if="!preselectedServiceFound || !preselectedService"/>
+        <div class="div" v-else>
+          {{ $_('Loading service information...') }}
+        </div>
       </tab-content>
       <tab-content :title="$_('Date')" :before-change="beforeDateTabSwitch">
         <step-date v-if="selectedService" />
@@ -77,7 +81,12 @@ export default {
       /**
        * @property {boolean} UI indicator that telling that thank you page is visible.
        */
-      isThankYouVisible: false
+      isThankYouVisible: false,
+
+      /**
+       * @property {boolean} Is preselected service found.
+       */
+      preselectedServiceFound: true
     }
   },
   components: {
@@ -91,8 +100,8 @@ export default {
     StepSessions
   },
 
-  created () {
-    this.fetchServices()
+  mounted () {
+    this.fetchServices().then(this.tryToSelectPredefinedService)
   },
 
   computed: {
@@ -113,6 +122,14 @@ export default {
      */
     redirectUrl () {
       return this.$config.redirectUrl
+    },
+    /**
+     * @since [*next-version*]
+     *
+     * @param {number} preselectedService Preselected service ID.
+     */
+    preselectedService () {
+      return !!this.$config.service
     }
   },
 
@@ -188,6 +205,28 @@ export default {
 
     beforeSessionTabSwitch () {
       return !!this.selectedSession
+    },
+
+    /**
+     * If wizard is created with service ID, it will select service automatically.
+     *
+     * @since [*next-version*]
+     */
+    tryToSelectPredefinedService () {
+      if (!this.$config.service) {
+        return
+      }
+      const preselectedService = this.servicesList.find((service) => {
+        return parseInt(service.id) === parseInt(this.$config.service)
+      })
+      if (!preselectedService) {
+        this.preselectedServiceFound = false
+        return
+      }
+      this.selectedService = preselectedService
+      this.$nextTick(() => {
+        this.$refs.bookingWizard.nextTab()
+      })
     }
   }
 }
