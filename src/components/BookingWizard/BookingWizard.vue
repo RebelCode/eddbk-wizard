@@ -91,7 +91,7 @@ export default {
     StepSessions
   },
 
-  created () {
+  mounted () {
     this.fetchServices()
   },
 

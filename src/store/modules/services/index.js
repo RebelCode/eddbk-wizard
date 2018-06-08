@@ -43,9 +43,11 @@ const getters = {
 
 const actions = {
   fetch ({ commit }) {
+    Vue.$eventBus.$emit('fetchingServices:start')
     Vue.$api.fetchServices().then(response => {
       const services = _.map(response.data.items)
       commit('set', { key: 'list', value: services })
+      Vue.$eventBus.$emit('fetchingServices:end')
     })
   }
 }
