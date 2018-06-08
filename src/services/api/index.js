@@ -37,16 +37,18 @@ di.factory('api', function (container: { http: HttpHandlerInterface, config: { b
      * @param {string} start Booking start date, in ISO8601.
      * @param {string} end Booking end date, in ISO8601.
      * @param {number} service Booking service id.
+     * @param {string} clientTz Client timezone name.
      *
      * @return {Promise<any>} Booking creation request.
      */
-    createBooking ({ start, end, service }) {
+    createBooking ({ start, end, service, clientTz }) {
       return http.post('/bookings', {
         start,
         end,
         service,
         resource: service,
-        transition: container.config.bookingStatusTransitions.cart
+        transition: container.config.bookingStatusTransitions.cart,
+        clientTz
       })
     }
   }

@@ -36,6 +36,10 @@
           <!--{{ $_('Click Add to cart to continue.') }}-->
         </div>
 
+        <div class="wizard-footer-clear" style="color: red" v-if="errorMessage">
+          {{ errorMessage }}
+        </div>
+
         <div class="wizard-footer-right">
           <!--&& !props.isLastStep-->
           <wizard-button v-if="props.activeTabIndex > 0"
@@ -68,6 +72,7 @@ import StepSessions from './StepSessions/StepSessions.vue'
 import ThankYouPage from './ThankYouPage/ThankYouPage.vue'
 
 import { mapStore } from '@/utils/vuex'
+import moment from '@/utils/moment'
 import { mapActions } from 'vuex'
 
 export default {
@@ -86,7 +91,12 @@ export default {
       /**
        * @property {boolean} Is preselected service found.
        */
-      preselectedServiceFound: true
+      preselectedServiceFound: true,
+      
+      /**
+       * @property {string} errorMessage Error message if booking is not created.
+       */
+      errorMessage: null
     }
   },
   components: {
@@ -149,10 +159,11 @@ export default {
      */
     createBooking () {
       this.isBookingCreating = true
-      this.bookSession({ bookingSession: this.selectedSession }).then(() => {
+      const timezone = this._getTimezone()
+      this.bookSession({ bookingSession: this.selectedSession, timezone }).then(() => {
         this.isBookingCreating = false
         this.handleBookSuccess()
-      })
+      }, this.handleBookError)
     },
     /**
      * Handler for case when booking was successfully created.
@@ -165,6 +176,16 @@ export default {
         return
       }
       this.showThankYouPage()
+    },
+    /**
+     * Handler for case when booking was not created.
+     *
+     * @since [*next-version*]
+     */
+    handleBookError (error) {
+      this.isBookingCreating = false
+      const responseDate = error.response.data
+      this.errorMessage = responseDate.data.errors[0] || responseDate.message
     },
     /**
      * Redirect browser to given URL.
@@ -187,6 +208,17 @@ export default {
      */
     hideThankYouPage () {
       this.isThankYouVisible = false
+    },
+    /**
+     * Detect browser timezone.
+     *
+     * @since [*next-version*]
+     *
+     * @return {string} Detected browser timezone.
+     */
+    _getTimezone () {
+      const fallbackTimezone = 'UTC+0'
+      return moment.tz.guess() || fallbackTimezone
     },
     beforeServiceTabSwitch () {
       if (this.selectedService) {

@@ -34,14 +34,16 @@ export default {
    * @param {object} state Vuex module store.
    * @param {object} rootState Vuex root store.
    * @param {object} bookingSession Session that should be booked.
+   * @param {string} timezone Client timezone.
    *
    * @return {Promise<any>} Booking creation request promise.
    */
-  bookSession ({ commit, state, rootState }, { bookingSession }) {
+  bookSession ({ commit, state, rootState }, { bookingSession, timezone }) {
     return Vue.$api.createBooking({
       start: moment.unix(bookingSession.start).format(),
       end: moment.unix(bookingSession.end).format(),
-      service: bookingSession.serviceId
+      service: bookingSession.serviceId,
+      clientTz: timezone
     })
   }
 }
