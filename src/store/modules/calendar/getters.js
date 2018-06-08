@@ -128,11 +128,12 @@ export default {
   visibleMonthSessions (state, getters) {
     if (state.visibleMonth.month === null) return []
     const monthRange = getRangeByDate(state.visibleMonth, 'month')
-    console.warn('monthRange', state.visibleMonth, monthRange)
+    const startNow = moment().unix()
+    const start = startNow > monthRange.start ? startNow : monthRange.start
     return mingo.find(getters.sessions, {
       serviceId: getters.serviceId,
       start: {
-        $gte: monthRange.start,
+        $gte: start,
         $lte: monthRange.end
       }
     }).all()
