@@ -11,7 +11,7 @@
 
     >
       <tab-content :title="$_('Service')" :before-change="beforeServiceTabSwitch">
-        <step-service v-model="selectedService" :list="servicesList" v-if="!preselectedServiceFound || !preselectedService"/>
+        <step-service v-model="selectedService" :list="servicesList" v-if="!preselectedServiceFound || !isServicePreselected"/>
         <div class="div" v-else>
           {{ $_('Loading service information...') }}
         </div>
@@ -92,7 +92,7 @@ export default {
        * @property {boolean} Is preselected service found.
        */
       preselectedServiceFound: true,
-      
+
       /**
        * @property {string} errorMessage Error message if booking is not created.
        */
@@ -136,9 +136,9 @@ export default {
     /**
      * @since [*next-version*]
      *
-     * @param {number} preselectedService Preselected service ID.
+     * @param {boolean} isServicePreselected Is service preselected in config.
      */
-    preselectedService () {
+    isServicePreselected () {
       return !!this.$config.service
     }
   },
