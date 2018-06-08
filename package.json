@@ -23,6 +23,7 @@
     "mingo": "^2.0.3",
     "moment": "^2.18.1",
     "moment-range": "^3.0.3",
+    "moment-timezone": "^0.5.17",
     "sprintf-js": "^1.1.1",
     "uglify-es": "git+https://github.com/mishoo/UglifyJS2.git#harmony",
     "vue": "^2.3.3",
