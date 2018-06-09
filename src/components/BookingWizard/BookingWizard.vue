@@ -19,7 +19,7 @@
       <tab-content :title="$_('Date')" :before-change="beforeDateTabSwitch">
         <step-date v-if="selectedService" />
       </tab-content>
-      <tab-content :title="$_('Available Time')" :before-change="beforeSessionTabSwitch">
+      <tab-content :title="$_('Time')" :before-change="beforeSessionTabSwitch">
         <step-sessions v-if="activeDate.day" />
       </tab-content>
 
