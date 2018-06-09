@@ -49,7 +49,7 @@
                          :class="['wizard-footer-right', props.isLastStep ? 'finish-button' : '']"
                          :style="props.fillButtonStyle"
                          :disabled="isBookingCreating ? 'disabled' : false"
-          >{{props.isLastStep ? $_('Add to cart') : $_('Next')}}</wizard-button>
+          >{{props.isLastStep ? $_('Book Now') : $_('Next')}}</wizard-button>
         </div>
       </template>
     </form-wizard>
