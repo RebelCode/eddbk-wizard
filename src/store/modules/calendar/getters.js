@@ -1,6 +1,7 @@
 import moment from '@/utils/moment'
 import mingo from '@/utils/mingo'
 import Vue from 'vue'
+import { nonPluralHumanizeDuration } from '@/utils/humanizeDuration'
 
 /*
 * Transforms given date object to timestamp ranges
@@ -39,7 +40,7 @@ export default {
     const duration = state.selectedSession.end - state.selectedSession.start
 
     return Vue.$_('You have selected %(duration)s appointment, starting at %(time)s on %(date)s. The price is of %(price)s.', {
-      duration: moment.duration(duration, 'seconds').humanize(),
+      duration: nonPluralHumanizeDuration(duration * 1000),
       time: start.format(Vue.$config.dateFormats.time),
       date: start.format(Vue.$config.dateFormats.fullDate),
       price: state.selectedSession.data.price.formatted

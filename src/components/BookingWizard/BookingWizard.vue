@@ -23,7 +23,7 @@
         <div class="wizard-footer-left" v-if="selectedService && props.activeTabIndex === 0">
           <div>{{ serviceInfo.pricePreview }}</div>
           <div style="opacity: .6" v-if="serviceInfo.isOtherSessionsAvailable">
-            {{ $_('Other options available in the next step') }}
+            {{ $_('More appointment durations available in the next step.') }}
           </div>
         </div>
 

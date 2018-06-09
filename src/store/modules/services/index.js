@@ -1,7 +1,7 @@
 import { commonMutations } from '@/store/mixins'
-import moment from '@/utils/moment'
 import _ from 'lodash'
 import Vue from 'vue'
+import { nonPluralHumanizeDuration } from '@/utils/humanizeDuration'
 
 const state = {
   list: [],
@@ -25,15 +25,14 @@ const getters = {
     if (!state.selected) {
       return {}
     }
-    console.info()
 
     const minSessionPrice = getters.minServiceSession.price.formatted
     const minSessionLength = getters.minServiceSession.sessionLength
-    const minSessionLengthHumanized = moment.duration(minSessionLength, 'seconds').humanize()
+    const minSessionLengthHumanized = nonPluralHumanizeDuration(minSessionLength * 1000)
 
     return {
       isOtherSessionsAvailable: Object.keys(state.selected.sessionLengths).length > 1,
-      pricePreview: Vue.$_('Starting at %(price)s per %(duration)s appointment', {
+      pricePreview: Vue.$_('Starting at %(price)s for a %(duration)s appointment.', {
         price: minSessionPrice,
         duration: minSessionLengthHumanized
       })
