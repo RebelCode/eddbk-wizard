@@ -4,7 +4,7 @@ export default {
   w: function () { return 'week' },
   d: function () { return 'day' },
   h: function () { return 'hour' },
-  m: function () { return 'month' },
+  m: function () { return 'minute' },
   s: function () { return 'second' },
   ms: function () { return 'millisecond' }
 }
