@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [[*next-version*]] - YYYY-MM-DD
+## [0.0.10] - 2018-06-12
+### Fixed
+- Typo for "minute" in non plural English humanizer.
+
 ## [0.0.9] - 2018-06-11
 ### Fixed
 - Styles for wizard progress if fixed for built version
