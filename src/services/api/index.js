@@ -43,15 +43,6 @@ di.factory('api', function (container: { http: HttpHandlerInterface, config: { b
      * @return {Promise<any>} Booking creation request.
      */
     createBooking ({ start, end, service, clientTz, notes }) {
-      console.info('post to /bookings', {
-        start,
-        end,
-        service,
-        resource: service,
-        transition: container.config.bookingStatusTransitions.cart,
-        clientTz,
-        notes
-      })
       return http.post('/bookings', {
         start,
         end,
