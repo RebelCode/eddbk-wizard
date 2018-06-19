@@ -33,7 +33,7 @@
     </div>
     <div class="inline-form-control">
       <label>{{ $_('Additional notes') }}</label>
-      <textarea rows="4" v-model="form.notes" class="eddb-control" :placeholder="$_('Have you got any special requests for the service provider? If yes, please note them down here')"></textarea>
+      <textarea rows="4" v-model="notes" class="eddb-control" :placeholder="$_('Have you got any special requests for the service provider? If yes, please note them down here')"></textarea>
     </div>
   </div>
 </template>
@@ -48,9 +48,6 @@ import Vue from 'vue'
 export default {
   data () {
     return {
-      form: {
-        notes: ''
-      },
       ui: {
         sessionLoading: false
       }
@@ -78,6 +75,10 @@ export default {
       'prevDate',
       'activeLoadedDays',
       'selectedSession'
+    ]),
+
+    ...mapStore('sessions', [
+      'notes'
     ]),
 
     activeDateDurations () {

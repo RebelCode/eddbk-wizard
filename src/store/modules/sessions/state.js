@@ -1,3 +1,5 @@
 export default {
-  sessions: []
+  sessions: [],
+
+  notes: ''
 }

@@ -125,6 +125,9 @@ export default {
       'activeDate',
       'sessionInfo'
     ]),
+    ...mapStore('sessions', [
+      'notes'
+    ]),
     /**
      * @since [*next-version*]
      *
@@ -160,7 +163,7 @@ export default {
     createBooking () {
       this.isBookingCreating = true
       const timezone = this._getTimezone()
-      this.bookSession({ bookingSession: this.selectedSession, timezone }).then(() => {
+      this.bookSession({ bookingSession: this.selectedSession, timezone, notes: this.notes }).then(() => {
         this.isBookingCreating = false
         this.handleBookSuccess()
       }, this.handleBookError)
